@@ -12,7 +12,7 @@ Loaded and transformed data from a CSV file, created calculated columns related 
 
 Used Python libraries such as Pandas, NumPy, Seaborn, and Matplotlib to load and clean real estate data. Created calculated columns for metrics like price per square meter and unbuilt surface area. Developed bar charts and scatter plots to visualize property values and surface area, using logarithmic scales for better clarity. Additionally, a boxplot was created to analyze the distribution of property values across different areas.
 
-*Just a snippet of the code *
+*Just a snippet of the code*
 ![alt text](https://github.com/philipo0/portfolio/blob/main/images/python_code.png)
 
 ![alt text](https://github.com/philipo0/portfolio/blob/main/images/python_bars.png)
