@@ -1,4 +1,4 @@
-# Philip Lorber Portfolios
+# Philip Lorber's Github Page
 
 ## Welcome to my portfolio
 
