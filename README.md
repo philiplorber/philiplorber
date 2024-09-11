@@ -16,6 +16,6 @@ Just a snippet of the code
 ![alt text](https://github.com/philipo0/portfolio/blob/main/images/python_code.png)
 
 ![alt text](https://github.com/philipo0/portfolio/blob/main/images/python_bars.png)
-![alt text](https://github.com/philipo0/portfolio/blob/main/images/python_dispersion_1.png)
+![alt text](https://github.com/philipo0/portfolio/blob/main/images/python_dispersion1.png)
 ![alt text](https://github.com/philipo0/portfolio/blob/main/images/python_dispersion_2.png)
 ![alt text](https://github.com/philipo0/portfolio/blob/main/images/python_boxplot.png)
