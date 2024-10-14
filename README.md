@@ -1,4 +1,4 @@
-# Philip Lorber's Github Page
+# Philip's Github Page
 
 ## Welcome to my portfolio
 
