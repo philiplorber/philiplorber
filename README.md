@@ -1,21 +1,35 @@
-# Philip's Github Page
+# 👋 ¡Hola, aqui Philip!
+**Analista de Negocios | Data & BI Analyst | Python • Power BI • SQL**
 
-## Welcome to my portfolio
+Soy un ingeniero comercial con enfoque en datos, apasionado por traducir problemas empresariales en soluciones técnicas. Trabajo con herramientas como Python, SQL, Power BI y Tableau para mejorar la toma de decisiones basada en datos.
 
-1. Data Analysis - Tableau 🔍
+- 📊 Especializado en Business Intelligence y Análisis de Datos
+- ⚙️ Automatizo procesos con Power Automate y Excel Macros
+- 🧠 Desarrollé un modelo predictivo de churn
+- 🌱 Actualmente aprendiendo más sobre ingeniería de datos y cloud
 
-Loaded and transformed data from a CSV file, created calculated columns related to values per square meter, and performed a comparative analysis of bathrooms and bedrooms. Developed visualizations including bar charts, scatter plots, Treemaps, and symbol maps, incorporating dynamic filters. Built an interactive dashboard with full integration between all charts.
+---
 
-![alt text](https://github.com/philipo0/portfolio/blob/main/images/tableau.png)
+# 🛠️ Habilidades Técnicas
 
-2. Data Analysis - Python 🔍
+## **Lenguajes & Herramientas:**
 
-Used Python libraries such as Pandas, NumPy, Seaborn, and Matplotlib to load and clean real estate data. Created calculated columns for metrics like price per square meter and unbuilt surface area. Developed bar charts and scatter plots to visualize property values and surface area, using logarithmic scales for better clarity. Additionally, a boxplot was created to analyze the distribution of property values across different areas.
+Python | SQL | Power BI | Tableau | Excel Macros | Power Automate
 
-*Just a snippet of the code*
-![alt text](https://github.com/philipo0/portfolio/blob/main/images/python_code.png)
+## **Frameworks & Plataformas:**
+Pandas • NumPy • Scikit-learn • Snowflake • Talend • Google Cloud Platform
 
-![alt text](https://github.com/philipo0/portfolio/blob/main/images/python_bars.png)
-![alt text](https://github.com/philipo0/portfolio/blob/main/images/python_dispersion1.png)
-![alt text](https://github.com/philipo0/portfolio/blob/main/images/python_dispersion_2.png)
-![alt text](https://github.com/philipo0/portfolio/blob/main/images/python_boxplot.png)
+---
+
+# 👨‍💻 Proyectos
+
+## 🔍 [Predictive Churn Model](https://github.com/philiplorber/machine-learning)
+Modelo de Machine Learning para predecir abandono de clientes usando Random Forest.
+
+## 📈 [Retail Sales Dashboard](https://github.com/philiplorber/data-analysis)
+Panel interactivo con KPIs de ventas, conectado a SQL y con actualización automática.
+
+## 🧾 [Report Automation in Excel](https://github.com/philiplorber/excel-macros)
+Macro de Excel para consolidar fuentes de datos y generar reportes automáticamente.
+
+---
