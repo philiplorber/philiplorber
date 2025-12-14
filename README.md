@@ -23,13 +23,6 @@ Pandas • NumPy • Scikit-learn • Snowflake • Talend • Google Cloud Plat
 
 # 👨‍💻 Proyectos
 
-## 🔍 [Predictive Churn Model](https://github.com/philiplorber/machine-learning)
-Modelo de Machine Learning para predecir abandono de clientes usando Random Forest.
-
-## 📈 [Retail Sales Dashboard](https://github.com/philiplorber/data-analysis)
-Panel interactivo con KPIs de ventas, conectado a SQL y con actualización automática.
-
-## 🧾 [Report Automation in Excel](https://github.com/philiplorber/excel-macros)
-Macro de Excel para consolidar fuentes de datos y generar reportes automáticamente.
+## 🔍 [Business Intelligence en Excel](https://github.com/philiplorber/data-proyects)
 
 ---
