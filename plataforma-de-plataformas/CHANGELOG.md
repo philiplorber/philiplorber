@@ -5,9 +5,20 @@ Andamio es la plataforma que arma y gestiona la presencia digital de una organiz
 - **Prototipo publicado:** https://claude.ai/artifact/DgaHj6yxcL9Whbe2F8Gtug (es privado: se comparte desde el menú Compartir)
 - **Código:** `plataforma-de-plataformas/index.html`
 - **Control de versiones:** cada versión corresponde a un commit en la rama `claude/dreamy-heisenberg-ki0d5j` y está anotada abajo con su código. Se usa versionado semántico: el número del medio sube con cada funcionalidad nueva y el último con cada corrección. Las etiquetas de git (`v0.1.0`…) se pueden crear desde GitHub en "Releases", con esos commits.
-- **Análisis comparativo:** `ANALISIS-AMBORAS.md`
+- **Análisis comparativo:** `ANALISIS-AMBORAS.md` · **Mercado regional:** `INVESTIGACION-LATAM.md`
+- **Cómo se trabaja (roles, decisiones, metacognición):** `BITACORA.md` · **Seguridad:** `SEGURIDAD.md`
 
 ---
+
+## v0.5.0 · 6 de noviembre de 2026, 12:50 (hora de Chile)
+**Entrada en un solo paso, seguridad y pruebas automáticas**
+
+- **Nueva pantalla de entrada:** una pregunta ("¿Qué organización quieres llevar a lo digital?"), una caja de texto y un botón ("Crear mi plataforma"). Los ejemplos solo rellenan la caja. Debajo se ven los 3 pasos (Describe, Revisa, Conecta) y una nota de confianza sobre dónde quedan tus datos. El resto de la herramienta aparece recién después del primer envío.
+- Si el texto es muy corto, aparece un aviso que dice qué falta.
+- Cada pregunta del flujo muestra en qué paso y pregunta vas.
+- **Seguridad:** se limpia y limita todo texto escrito; el texto de la persona va separado de las instrucciones para la IA; nuevo `SEGURIDAD.md` con lo aplicado y lo que falta para el producto real.
+- **DevOps:** prueba de humo automática (`tests/smoke.cjs`, 9 revisiones, incluido un intento de inyectar código) y flujo de GitHub Actions que la corre en cada cambio.
+- **Documentos nuevos:** `INVESTIGACION-LATAM.md` (competidores en Chile y Latinoamérica), `BITACORA.md` (registro de trabajo y metacognición) y la skill `.claude/skills/andamio-equipo` (roles para futuras sesiones).
 
 ## v0.4.0 · 6 de noviembre de 2026 · commit `e5d3437`
 **Herramientas para vender más (inspiradas en la revisión de Amboras)**

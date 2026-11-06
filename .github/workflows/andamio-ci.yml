@@ -1,0 +1,28 @@
+# Revisión automática de Andamio: cada vez que se sube un cambio a la carpeta
+# del prototipo, GitHub abre la página en un navegador y corre la prueba de humo.
+name: Andamio CI
+
+on:
+  push:
+    paths: ["plataforma-de-plataformas/**", ".github/workflows/andamio-ci.yml"]
+  pull_request:
+    paths: ["plataforma-de-plataformas/**", ".github/workflows/andamio-ci.yml"]
+
+permissions:
+  contents: read   # solo lectura: la revisión no puede modificar el repositorio
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Instalar navegador de pruebas
+        run: |
+          npm install --no-save playwright@1.48.2
+          npx playwright install --with-deps chromium
+      - name: Prueba de humo
+        run: node plataforma-de-plataformas/tests/smoke.cjs
