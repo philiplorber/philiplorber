@@ -4,11 +4,22 @@ Andamio es la plataforma que arma y gestiona la presencia digital de una organiz
 
 - **Prototipo publicado:** https://claude.ai/artifact/DgaHj6yxcL9Whbe2F8Gtug (es privado: se comparte desde el menú Compartir)
 - **Código:** `plataforma-de-plataformas/index.html`
-- **Control de versiones:** cada versión tiene su etiqueta en git (`v0.1.0`, `v0.2.0`, `v0.3.0`). Se usa versionado semántico: el número del medio sube con cada funcionalidad nueva y el último con cada corrección.
+- **Control de versiones:** cada versión corresponde a un commit en la rama `claude/dreamy-heisenberg-ki0d5j` y está anotada abajo con su código. Se usa versionado semántico: el número del medio sube con cada funcionalidad nueva y el último con cada corrección. Las etiquetas de git (`v0.1.0`…) se pueden crear desde GitHub en "Releases", con esos commits.
+- **Análisis comparativo:** `ANALISIS-AMBORAS.md`
 
 ---
 
-## v0.3.0 · 6 de noviembre de 2026
+## v0.4.0 · 6 de noviembre de 2026
+**Herramientas para vender más (inspiradas en la revisión de Amboras)**
+
+- Nuevo grupo **Crecer** en el menú del panel:
+  - **Pruebas A/B:** la IA prueba dos versiones de un botón, una foto, un precio o el asunto de un mensaje, y aplica la ganadora cuando tiene al menos 95% de certeza. Cada prueba se puede pausar.
+  - **Ventas cruzadas:** ofertas según lo que hace el cliente (al reservar cancha se ofrece un tubo de pelotas; al pedir ceviche, un pisco sour), con lo que aceptan y las ventas extra del mes en pesos.
+  - **Mensajes automáticos:** confirmación, recordatorio, cuota por vencer, pedir reseña, pago fallido, cumpleaños… Salen primero por WhatsApp y el correo queda de respaldo.
+- El **Resumen** suma el embudo del mes: visitas, interesados, inicios y confirmaciones.
+- Se agregó el documento `ANALISIS-AMBORAS.md`, con el inventario de Amboras, cómo lo aplica Andamio, precios, diferencias para Latinoamérica y cómo abordarlos.
+
+## v0.3.0 · 6 de noviembre de 2026 · commit `5a06cc0`
 **Control de versiones y foco en la presencia digital**
 
 - Cada pedido que haces en la conversación guarda una **versión nueva de la plataforma**, con fecha y hora, lo que dijiste y lo que se construyó.
@@ -17,7 +28,7 @@ Andamio es la plataforma que arma y gestiona la presencia digital de una organiz
 - Se cambió el enfoque del producto: "toda la presencia digital de tu organización, en un solo lugar".
 - Se muestra la versión de Andamio al pie del Plano.
 
-## v0.2.0 · 6 de noviembre de 2026
+## v0.2.0 · 6 de noviembre de 2026 · commit `5372bc7`
 **Panel del negocio: integración de todos los canales**
 
 - La plataforma generada tiene dos caras: el **Sitio para clientes** y el **Panel del negocio**, con menú a la izquierda.
@@ -31,7 +42,7 @@ Andamio es la plataforma que arma y gestiona la presencia digital de una organiz
 - Con la IA activa, el botón **Redactar con IA** escribe la respuesta a cada mensaje.
 - En "Podrías estar olvidando" se sumaron temas de integración: reglas de WhatsApp Business, cuentas profesionales de Meta, aviso de grabación de llamadas y la Ley 21.719 de datos personales.
 
-## v0.1.0 · 6 de noviembre de 2026
+## v0.1.0 · 6 de noviembre de 2026 · commit `01bdf0b`
 **Primer prototipo: constructor conversacional**
 
 - La conversación hace una pregunta a la vez, con opciones que aceptas o rechazas: objetivo, perfiles de usuario, secciones, números del negocio (canchas, mesas, horarios), colores, ubicación del menú, portada y nombre.

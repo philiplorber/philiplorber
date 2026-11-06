@@ -159,7 +159,7 @@ button.pv-card:hover{border-color:var(--p)}
 .pv-2{display:grid;grid-template-columns:1.25fr 1fr;gap:12px}
 .pv.compact .pv-2{grid-template-columns:1fr}
 .pv-bars{display:flex;flex-direction:column;gap:9px}
-.pv-bar{display:grid;grid-template-columns:minmax(0,150px) 1fr 36px;gap:10px;align-items:center;font-size:13px}
+.pv-bar{display:grid;grid-template-columns:minmax(0,170px) 1fr 40px;gap:10px;align-items:center;font-size:13px}
 .pv-bl{display:flex;gap:8px;align-items:center;min-width:0;overflow:hidden;white-space:nowrap}
 .pv-bt{height:10px;background:color-mix(in srgb,var(--pfg) 6%,transparent);border-radius:4px;overflow:hidden}
 .pv-bt i{display:block;height:100%;background:var(--p);border-radius:0 4px 4px 0}
@@ -278,6 +278,8 @@ const ICON = {
   inbox:'<path d="M3 13l3-8h12l3 8v6a1 1 0 01-1 1H4a1 1 0 01-1-1zM3 13h5l1 3h6l1-3h5"/>',
   faq:'<circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 114 2c-1 .6-1.5 1.2-1.5 2.5M12 17h.01"/>',
   plug:'<path d="M9 3v5M15 3v5M6 8h12v3a6 6 0 01-12 0zM12 17v4"/>',
+  ab:'<path d="M3 20l4-14 4 14M4.5 15h5M14 6h4a2.5 2.5 0 010 5h-4zm0 5h4.5a2.5 2.5 0 010 5H14z"/>',
+  auto:'<path d="M4 4h16v12H8l-4 4zM8 9h8M8 12h5"/>',
   lista:'<path d="M9 6h12M9 12h12M9 18h12M4 6h.01M4 12h.01M4 18h.01"/>'
 };
 const icon = t => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON[t] || ICON.lista}</svg>`;
@@ -473,6 +475,23 @@ const FAQS = {
   resto:[{q:"¿Tienen mesa hoy?",n:41,a:"Revisa las reservas y ofrece la hora libre más cercana."},{q:"¿Opciones veganas o sin gluten?",n:18,a:"Envía los platos marcados en la carta."},{q:"Horario y si abren domingo",n:16,a:"Envía el horario de la semana."},{q:"¿Hacen delivery?",n:14,a:"Envía las apps donde están y el radio de retiro."},{q:"¿Tienen estacionamiento?",n:7,a:"Indica el estacionamiento más cercano."}],
   generic:[{q:"¿Tienen disponibilidad?",n:26,a:"Ofrece las próximas horas libres."},{q:"¿Cuánto cuesta?",n:19,a:"Envía la lista de precios."},{q:"¿Dónde están?",n:11,a:"Envía la dirección y el mapa."},{q:"Horario de atención",n:9,a:"Envía el horario."}]
 };
+const GROW = {
+  club:{
+    ab:[{what:"Texto del botón principal",a:"Reservar cancha",b:"Juega hoy",ca:4.1,cb:5.3,p:96,st:"Ganó B: aplicado"},{what:"Precio de la clase de prueba",a:"Gratis",b:"$5.000 descontable",ca:9.8,cb:8.9,p:29,st:"En curso · día 3"},{what:"Asunto del aviso de cuota",a:"Tu cuota vence el 10",b:"Mantén tu cancha asegurada",ca:38,cb:46,p:93,st:"En curso · día 5"}],
+    cross:[{when:"Reserva una cancha",offer:"Tubo de pelotas",price:6990,take:18,extra:412000},{when:"Se inscribe a clases",offer:"Raqueta de arriendo por mes",price:12000,take:11,extra:264000},{when:"Paga la cuota anual",offer:"Pack Familia: 2 invitados al mes",price:25000,take:7,extra:350000}],
+    auto:[{name:"Confirmación de reserva",trig:"Al reservar una cancha",n:412},{name:"Recordatorio 2 horas antes",trig:"Antes de cada reserva",n:398},{name:"Cuota por vencer",trig:"3 días antes del vencimiento",n:210},{name:"Pedir reseña",trig:"El día después del primer partido",n:64},{name:"Bienvenida a socios nuevos",trig:"Al aprobarse la incorporación",n:12},{name:"Pago fallido",trig:"Cuando un pago no pasa",n:9}],
+    funnel:[["Visitas al sitio",3200],["Vieron las reservas",1480],["Iniciaron una reserva",640],["Confirmaron",512]]},
+  resto:{
+    ab:[{what:"Foto del plato estrella",a:"Ceviche de cerca",b:"Mesa compartida",ca:6.2,cb:7.9,p:95,st:"Ganó B: aplicado"},{what:"Texto del botón",a:"Reservar mesa",b:"Asegura tu mesa",ca:5.1,cb:5.4,p:62,st:"En curso · día 2"},{what:"Envío gratis desde",a:"$15.000",b:"$20.000",ca:12.4,cb:11.8,p:35,st:"En curso · día 4"}],
+    cross:[{when:"Pide un ceviche",offer:"Pisco sour",price:4900,take:24,extra:588000},{when:"Pide el menú del día",offer:"Postre del día",price:2900,take:31,extra:449000},{when:"Reserva para 6 o más",offer:"Tabla para compartir",price:16900,take:14,extra:710000}],
+    auto:[{name:"Confirmación de reserva",trig:"Al reservar",n:690},{name:"Recordatorio el mismo día",trig:"3 horas antes",n:655},{name:"Pedido listo para retiro",trig:"Cuando cocina lo marca listo",n:320},{name:"Pedir reseña",trig:"El día después de la visita",n:240},{name:"Pedido abandonado",trig:"30 minutos sin terminar el pedido",n:88},{name:"Saludo de cumpleaños",trig:"La semana del cumpleaños",n:41}],
+    funnel:[["Visitas al sitio",5400],["Vieron la carta",3100],["Iniciaron reserva o pedido",1150],["Confirmaron",930]]},
+  generic:{
+    ab:[{what:"Titular de la portada",a:"Todo lo que necesitas",b:"Agenda en 1 minuto",ca:3.2,cb:4.4,p:97,st:"Ganó B: aplicado"},{what:"Texto del botón",a:"Contactar",b:"Pedir cotización",ca:2.8,cb:3.1,p:66,st:"En curso · día 3"}],
+    cross:[{when:"Agenda un servicio",offer:"Servicio complementario",price:15000,take:12,extra:360000},{when:"Compra por primera vez",offer:"Pack de 3 con descuento",price:39900,take:8,extra:480000}],
+    auto:[{name:"Confirmación",trig:"Al agendar o comprar",n:280},{name:"Recordatorio",trig:"1 día antes",n:260},{name:"Pedir reseña",trig:"Después del servicio",n:90},{name:"Pago fallido",trig:"Cuando un pago no pasa",n:6}],
+    funnel:[["Visitas al sitio",2100],["Vieron servicios",980],["Iniciaron contacto",310],["Concretaron",190]]}
+};
 const INTEG_BLIND = [
   "WhatsApp Business: se conecta con un número verificado ante Meta. Pasadas 24 horas desde el último mensaje del cliente, solo puedes escribirle con plantillas aprobadas, y esas tienen costo.",
   "Instagram y Facebook: la cuenta debe ser profesional y estar vinculada a una página de Facebook para leer y responder mensajes desde aquí.",
@@ -512,13 +531,13 @@ function initials(n){
 /* ---------- State ---------- */
 function emptySpec(){ return {name:"",tagline:"",kind:"",domain:"",objective:"",audiences:[],modules:[],colors:{primary:"#1D3F72",accent:"#D9E43C",surface:"light"},nav:"top",cta:"",facts:{},stats:[],channels:[],autoreply:"sugerir",blindspots:[]}; }
 let S = fresh();
-function fresh(){ return {spec:emptySpec(), log:[], step:0, map:[], page:"home", booked:[], engine:"local", question:null, face:"cliente", apage:"a_resumen", inbox:{filter:"all", sel:null, read:[], sent:{}, draft:{}, done:[]}, faqOff:[], versions:[]}; }
+function fresh(){ return {spec:emptySpec(), log:[], step:0, map:[], page:"home", booked:[], engine:"local", question:null, face:"cliente", apage:"a_resumen", inbox:{filter:"all", sel:null, read:[], sent:{}, draft:{}, done:[]}, faqOff:[], growOff:[], versions:[]}; }
 const undo = [];
 let sampleFn = null, aiReady = false, aiWanted = true, busy = null;
 
 const KEY = "andamio.v1";
-try { const raw = localStorage.getItem(KEY); if (raw) { const p = JSON.parse(raw); if (p && p.spec && Array.isArray(p.log)) { S = Object.assign(fresh(), p); S.spec = Object.assign(emptySpec(), S.spec); S.inbox = Object.assign(fresh().inbox, S.inbox||{}); if(!Array.isArray(S.versions)) S.versions=[]; } } } catch(e) {}
-const APP_VERSION = "0.3.0";
+try { const raw = localStorage.getItem(KEY); if (raw) { const p = JSON.parse(raw); if (p && p.spec && Array.isArray(p.log)) { S = Object.assign(fresh(), p); S.spec = Object.assign(emptySpec(), S.spec); S.inbox = Object.assign(fresh().inbox, S.inbox||{}); if(!Array.isArray(S.versions)) S.versions=[]; if(!Array.isArray(S.growOff)) S.growOff=[]; } } } catch(e) {}
+const APP_VERSION = "0.4.0";
 function recordMap(entry){
   S.map.push(entry);
   S.versions.push({n:(S.versions.length?S.versions[S.versions.length-1].n:0)+1, at:Date.now(), said:entry.said, built:entry.built||[], spec:clone(S.spec)});
@@ -841,6 +860,7 @@ $("#canvas").addEventListener("click", e=>{
     S.inbox.sent[i]=(S.inbox.sent[i]||[]).concat(t); S.inbox.draft[i]=""; if(!S.inbox.read.includes(i)) S.inbox.read.push(i); save(); renderStage(); return; }
   if(e.target.closest("#pvAI")){ draftAI(S.inbox.sel, e.target.closest("#pvAI")); return; }
   if(e.target.closest("#pvDone")){ const i=S.inbox.sel; S.inbox.done = S.inbox.done.includes(i) ? S.inbox.done.filter(x=>x!==i) : [...S.inbox.done, i]; if(!S.inbox.read.includes(i)) S.inbox.read.push(i); save(); renderStage(); return; }
+  const gw=e.target.closest("[data-grow]"); if(gw){ const k=gw.dataset.grow; S.growOff = S.growOff.includes(k) ? S.growOff.filter(x=>x!==k) : [...S.growOff,k]; save(); renderStage(); return; }
   const fq=e.target.closest("[data-faq]"); if(fq){ const k=+fq.dataset.faq; S.faqOff = S.faqOff.includes(k) ? S.faqOff.filter(x=>x!==k) : [...S.faqOff,k]; save(); renderStage(); return; }
   const cn=e.target.closest("[data-connect]"); if(cn){ const id=cn.dataset.connect, chs=S.spec.channels||[]; snapshot(); const on=!chs.includes(id);
     S.spec.channels = on ? [...chs,id] : chs.filter(x=>x!==id);
@@ -910,6 +930,7 @@ function adminNav(){
   return [
     {g:"General", items:[{id:"a_resumen",label:"Resumen",ic:"dashboard"},{id:"a_bandeja",label:"Bandeja unificada",ic:"inbox",badge:cs.filter(isUnread).length},{id:"a_faq",label:"Lo que preguntan",ic:"faq"}]},
     {g:"Canales", items:chs.map(c=>({id:"ch_"+c,label:CH[c].label,ch:c,badge:cs.filter(x=>x.ch===c&&isUnread(x)).length}))},
+    {g:"Crecer", items:[{id:"g_ab",label:"Pruebas A/B",ic:"ab"},{id:"g_cross",label:"Ventas cruzadas",ic:"tienda"},{id:"g_auto",label:"Mensajes automáticos",ic:"auto"}]},
     {g:"Negocio", items:sp.modules.map(m=>({id:m.id,label:m.label,ic:m.type}))},
     {g:"Ajustes", items:[{id:"a_conexiones",label:"Conexiones",ic:"plug"}]}
   ].filter(g=>g.items.length);
@@ -920,7 +941,7 @@ function renderPanel(c, style, logo){
   const navHtml=nav.map(g=>`<div class="pv-g">${compact?"":`<span class="pv-gl">${g.g}</span>`}${g.items.map(it=>`<button type="button" data-apage="${it.id}" ${S.apage===it.id?'aria-current="page"':""}>${it.ch?chBadge(it.ch):icon(it.ic)}<span>${esc(it.label)}</span>${it.badge?`<em class="pv-cnt">${it.badge}</em>`:""}</button>`).join("")}</div>`).join("");
   const top=`<div class="pv-row pv-topbar"><input class="pv-input" style="max-width:340px" placeholder="Buscar conversaciones, clientes, reservas…" tabindex="-1" aria-label="Buscar"><span class="pv-ex">Panel del negocio · Administración</span></div>`;
   const slug=(sp.name||"plataforma").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
-  c.innerHTML=`<div class="device ${device}"><div class="chrome"><i></i><i></i><i></i><span class="url">panel.${esc(slug)}.andamio.app/${esc(S.apage.replace(/^(a_|ch_)/,""))}</span></div>
+  c.innerHTML=`<div class="device ${device}"><div class="chrome"><i></i><i></i><i></i><span class="url">panel.${esc(slug)}.andamio.app/${esc(S.apage.replace(/^(a_|ch_|g_)/,""))}</span></div>
     <div class="pv side ${compact?"compact":""}" style="${style}"><aside class="pv-side">${logo}<nav class="pv-nav" aria-label="Menú del panel">${navHtml}</nav></aside><div class="pv-body">${top}${adminPage()}</div></div></div>`;
   const n=(sp.channels||[]).length;
   $("#stageNote").textContent = n ? `${n} canales en una bandeja · menú lateral` : "Sin canales conectados todavía";
@@ -940,8 +961,21 @@ function adminPage(){
     return h("Resumen de hoy", "Todo lo que llegó por tus canales, en un solo vistazo.")+tiles(k)+
       `<div class="pv-2"><div class="pv-card" style="gap:12px"><b>Mensajes por canal, hoy</b><div class="pv-bars">${rows.map(r=>`<div class="pv-bar" title="${esc(CH[r].label)}: ${CH_TODAY[r]} mensajes hoy"><span class="pv-bl">${chBadge(r)}<span>${esc(CH[r].label)}</span></span><span class="pv-bt"><i style="width:${(CH_TODAY[r]||0)/max*100}%"></i></span><b>${CH_TODAY[r]||0}</b></div>`).join("")}</div></div>
       <div class="pv-card" style="gap:10px"><div class="pv-row"><b>Lo que más preguntan</b><button type="button" class="pv-chip" data-apage="a_faq">Ver todo</button></div>${faqs.slice(0,3).map(f=>`<div class="pv-row"><span>${esc(f.q)}</span><b style="font-variant-numeric:tabular-nums">${f.n}</b></div>`).join("")}</div></div>
+      ${(()=>{ const F=GROW[dom3()].funnel, top=F[0][1]; return `<div class="pv-card" style="gap:12px"><b>Embudo de este mes</b><div class="pv-bars">${F.map(f=>`<div class="pv-bar" title="${esc(f[0])}: ${f[1].toLocaleString("es-CL")}"><span class="pv-bl"><span>${esc(f[0])}</span></span><span class="pv-bt"><i style="width:${f[1]/top*100}%"></i></span><b>${Math.round(f[1]/top*100)}%</b></div>`).join("")}</div><span class="pv-ex">${F[F.length-1][1].toLocaleString("es-CL")} de ${top.toLocaleString("es-CL")} visitas terminaron en ${dom3()==="generic"?"venta":"reserva o pedido"}.</span></div>`; })()}
       <div class="pv-card" style="gap:4px;padding:6px 0"><b style="padding:8px 14px">Últimos mensajes</b>${cs.slice(0,4).map(cv=>convRow(cv,false)).join("")}</div>`+ex;
   }
+  const G=GROW[dom3()], off=k=>S.growOff.includes(k);
+  const tog=(k,onTxt,offTxt)=>`<button type="button" class="pv-chip" data-grow="${k}" aria-pressed="${!off(k)}">${off(k)?offTxt:onTxt}</button>`;
+  if(p==="g_ab") return h("Pruebas A/B", "La IA propone variantes, reparte las visitas entre A y B y aplica la ganadora cuando hay al menos 95% de certeza.")+
+    `<div class="pv-tblwrap"><table class="pv-tbl"><thead><tr><th>Qué se prueba</th><th>A</th><th>B</th><th>Conversión A / B</th><th>Probabilidad de que gane B</th><th>Estado</th><th></th></tr></thead><tbody>${G.ab.map((t,i)=>`<tr><td><b>${esc(t.what)}</b></td><td>${esc(t.a)}</td><td>${esc(t.b)}</td><td>${String(t.ca).replace(".",",")}% / ${String(t.cb).replace(".",",")}%</td><td>${t.p}%</td><td><span class="pv-tag">${off("ab"+i)?"Pausada":esc(t.st)}</span></td><td>${tog("ab"+i,"Pausar","Reanudar")}</td></tr>`).join("")}</tbody></table></div>`+
+    `<div class="pv-card"><b>Qué más se puede probar</b><span>Titulares, botones, fotos, precios, packs, monto para envío gratis, asuntos de correo y horario de los mensajes.</span></div>`+ex;
+  if(p==="g_cross"){ const tot=G.cross.reduce((a,c,i)=>a+(off("cx"+i)?0:c.extra),0);
+    return h("Ventas cruzadas", "Ofertas que aparecen en el momento justo: al reservar, al pagar o al pedir.")+tiles([["Ventas extra este mes",clp(tot)],["Ofertas activas",String(G.cross.filter((c,i)=>!off("cx"+i)).length)]])+
+    `<div class="pv-tblwrap"><table class="pv-tbl"><thead><tr><th>Cuando el cliente…</th><th>Se ofrece</th><th>Precio</th><th>Aceptan</th><th>Extra este mes</th><th></th></tr></thead><tbody>${G.cross.map((c,i)=>`<tr><td>${esc(c.when)}</td><td><b>${esc(c.offer)}</b></td><td>${clp(c.price)}</td><td>${c.take}%</td><td>${off("cx"+i)?"—":clp(c.extra)}</td><td>${tog("cx"+i,"Activa","Apagada")}</td></tr>`).join("")}</tbody></table></div>`+ex; }
+  if(p==="g_auto"){ const via=chs.includes("whatsapp")?"whatsapp":"correo";
+    return h("Mensajes automáticos", "Se envían solos según lo que pasa en el negocio.")+
+    `<div class="pv-card"><b>WhatsApp primero</b><span>En Chile la gente abre WhatsApp mucho más que el correo, así que estos mensajes salen por ${esc(CH[via].label)}${via==="whatsapp"?" (con plantillas aprobadas por Meta) y por correo como respaldo":""}.</span></div>`+
+    `<div class="pv-tblwrap"><table class="pv-tbl"><thead><tr><th>Mensaje</th><th>Cuándo se envía</th><th>Canal</th><th>Enviados este mes</th><th></th></tr></thead><tbody>${G.auto.map((a,i)=>`<tr><td><b>${esc(a.name)}</b></td><td>${esc(a.trig)}</td><td>${chBadge(via)}</td><td>${off("au"+i)?"—":a.n}</td><td>${tog("au"+i,"Activo","Apagado")}</td></tr>`).join("")}</tbody></table></div>`+ex; }
   if(p==="a_bandeja") return h("Bandeja unificada", "WhatsApp, Instagram, correo, llamadas y reseñas en una sola lista. Respondes desde aquí y sale por el canal original.")+inboxHTML(null)+ex;
   if(p.startsWith("ch_")){
     const id=p.slice(3), c=CH[id]; if(!c) return "";
