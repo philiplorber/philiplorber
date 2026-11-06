@@ -10,7 +10,7 @@ Andamio es la plataforma que arma y gestiona la presencia digital de una organiz
 
 ---
 
-## v0.5.0 · 6 de noviembre de 2026, 12:50 (hora de Chile)
+## v0.5.0 · 6 de noviembre de 2026, 12:50 (hora de Chile) · commit `fa761cd`
 **Entrada en un solo paso, seguridad y pruebas automáticas**
 
 - **Nueva pantalla de entrada:** una pregunta ("¿Qué organización quieres llevar a lo digital?"), una caja de texto y un botón ("Crear mi plataforma"). Los ejemplos solo rellenan la caja. Debajo se ven los 3 pasos (Describe, Revisa, Conecta) y una nota de confianza sobre dónde quedan tus datos. El resto de la herramienta aparece recién después del primer envío.
