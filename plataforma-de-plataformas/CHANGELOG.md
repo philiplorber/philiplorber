@@ -9,7 +9,7 @@ Andamio es la plataforma que arma y gestiona la presencia digital de una organiz
 
 ---
 
-## v0.4.0 · 6 de noviembre de 2026
+## v0.4.0 · 6 de noviembre de 2026 · commit `e5d3437`
 **Herramientas para vender más (inspiradas en la revisión de Amboras)**
 
 - Nuevo grupo **Crecer** en el menú del panel:
