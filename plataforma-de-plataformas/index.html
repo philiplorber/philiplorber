@@ -216,7 +216,7 @@ button.pv-card:hover{border-color:var(--p)}
   <header class="top">
     <div class="brand">
       <svg class="mark" viewBox="0 0 26 26" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 23V3M22 23V3M4 8h18M4 15h18M4 8l18 7"/></g></svg>
-      <b>Andamio</b><span>la plataforma que arma plataformas</span>
+      <b>Andamio</b><span>toda la presencia digital de tu organización, en un solo lugar</span>
     </div>
     <div class="sp"></div>
     <button class="badge" id="engineBadge" type="button" title="Cambiar motor"><i></i><span>Conectando IA…</span></button>
@@ -512,12 +512,22 @@ function initials(n){
 /* ---------- State ---------- */
 function emptySpec(){ return {name:"",tagline:"",kind:"",domain:"",objective:"",audiences:[],modules:[],colors:{primary:"#1D3F72",accent:"#D9E43C",surface:"light"},nav:"top",cta:"",facts:{},stats:[],channels:[],autoreply:"sugerir",blindspots:[]}; }
 let S = fresh();
-function fresh(){ return {spec:emptySpec(), log:[], step:0, map:[], page:"home", booked:[], engine:"local", question:null, face:"cliente", apage:"a_resumen", inbox:{filter:"all", sel:null, read:[], sent:{}, draft:{}, done:[]}, faqOff:[]}; }
+function fresh(){ return {spec:emptySpec(), log:[], step:0, map:[], page:"home", booked:[], engine:"local", question:null, face:"cliente", apage:"a_resumen", inbox:{filter:"all", sel:null, read:[], sent:{}, draft:{}, done:[]}, faqOff:[], versions:[]}; }
 const undo = [];
 let sampleFn = null, aiReady = false, aiWanted = true, busy = null;
 
 const KEY = "andamio.v1";
-try { const raw = localStorage.getItem(KEY); if (raw) { const p = JSON.parse(raw); if (p && p.spec && Array.isArray(p.log)) { S = Object.assign(fresh(), p); S.spec = Object.assign(emptySpec(), S.spec); S.inbox = Object.assign(fresh().inbox, S.inbox||{}); } } } catch(e) {}
+try { const raw = localStorage.getItem(KEY); if (raw) { const p = JSON.parse(raw); if (p && p.spec && Array.isArray(p.log)) { S = Object.assign(fresh(), p); S.spec = Object.assign(emptySpec(), S.spec); S.inbox = Object.assign(fresh().inbox, S.inbox||{}); if(!Array.isArray(S.versions)) S.versions=[]; } } } catch(e) {}
+const APP_VERSION = "0.3.0";
+function recordMap(entry){
+  S.map.push(entry);
+  S.versions.push({n:(S.versions.length?S.versions[S.versions.length-1].n:0)+1, at:Date.now(), said:entry.said, built:entry.built||[], spec:clone(S.spec)});
+  if(S.versions.length>80) S.versions.shift();
+}
+const fmtTime = t => new Date(t).toLocaleString("es-CL",{day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"});
+function changelogText(){
+  return `# Registro de ${S.spec.name||"la plataforma"}\n\n` + [...S.versions].reverse().map(v=>`## v${v.n} · ${fmtTime(v.at)}\n- Pedido: ${v.said}\n${v.built.map(b=>"- "+b).join("\n")}`).join("\n\n");
+}
 function save(){ try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e) {} }
 function snapshot(){ undo.push(JSON.stringify(S)); if (undo.length > 40) undo.shift(); $("#undoBtn").disabled = false; }
 
@@ -683,7 +693,7 @@ async function aiTurn(userText){
       options:r.question.options.slice(0,8).map(o=>({label:String(o.label||""), selected:!!o.selected, swatch:Array.isArray(o.swatch)?o.swatch.filter(x=>HEX.test(x)).slice(0,2):null}))} : null;
     const changes = Array.isArray(r.changes)?r.changes.map(String).slice(0,6):[];
     const blind = !q && Array.isArray(r.blindspots) ? r.blindspots.map(String).slice(0,6) : [];
-    S.map.push({said:userText, built:changes});
+    recordMap({said:userText, built:changes});
     S.log.push({who:"ai", text:String(r.say||""), changes, question:q, blind});
     S.question=q; S.spec.blindspots=blind;
   }catch(e){
@@ -701,7 +711,7 @@ async function aiTurn(userText){
 /* ---------- Conversation flow ---------- */
 function localFlowAfterIdea(text, prefix){
   const ch=localStart(text); deriveStats();
-  S.map.push({said:text, built:ch});
+  recordMap({said:text, built:ch});
   const q=localNext(); S.question=q;
   S.log.push({who:"ai", text:(prefix?prefix+" ":"")+`Perfecto, armé un primer borrador para ${S.spec.name}. Míralo a la derecha; lo vamos afinando con cada respuesta.`, changes:ch, question:q});
 }
@@ -720,12 +730,12 @@ function submit(sel, free){
   else if(q && !(free && !sel.length && applyCommand(free).length && !["colors","name","units","hours","surface"].includes(q.key))){
     const step=FLOW[S.step]; let ch=step.apply(sel.map(String), free); deriveStats();
     const face={channels:"panel",autoreply:"panel",modules:"cliente",units:"cliente",hours:"cliente",nav:"cliente",home:"cliente",colors:S.face}[step.key]; if(face) S.face=face;
-    S.map.push({said, built:ch}); S.step++;
+    recordMap({said, built:ch}); S.step++;
     const nq=localNext(); S.question=nq;
     S.log.push({who:"ai", text: nq ? pick(["Listo.","Hecho.","Anotado.","Perfecto."]) : `Listo, ${S.spec.name} tiene su primera versión. Recorre las secciones en la vista previa; puedes seguir pidiendo cambios aquí (ej. “menú lateral”, “agrega galería”, “colores verde y blanco”).`, changes:ch, question:nq, blind: nq?[]:blindList()});
   } else {
     const ch=applyCommand(free,true); deriveStats();
-    S.map.push({said, built:ch.length?ch:["Sin cambios"]});
+    recordMap({said, built:ch.length?ch:["Sin cambios"]});
     S.log.push({who:"ai", text: ch.length ? "Cambio aplicado." + (q ? " Seguimos con la pregunta pendiente." : "") : "No entendí ese cambio. Prueba con algo como “menú lateral”, “colores azul y amarillo” o “agrega tienda”.", changes:ch, question:q});
   }
   if(!S.spec.modules.some(m=>m.id===S.page)) S.page="home";
@@ -737,7 +747,7 @@ const pick = a => a[Math.floor(Math.random()*a.length)];
 function renderLog(){
   const el=$("#log"); let h="";
   if(!S.log.length){
-    h+=`<div class="msg ai"><div class="who">Andamio</div><p>Hola. Cuéntame qué plataforma quieres crear y para quién. Yo te voy proponiendo botones, secciones, colores y números, y tú aceptas o rechazas.</p>
+    h+=`<div class="msg ai"><div class="who">Andamio</div><p>Hola. Cuéntame qué organización quieres llevar a lo digital y para quién: armo su plataforma y junto en un panel todos sus canales (WhatsApp, Instagram, correo, llamadas, reseñas). Yo te voy proponiendo botones, secciones, colores y números, y tú aceptas o rechazas.</p>
       <div class="q"><h3>¿Qué plataforma quieres crear?</h3><p class="hint">Escríbelo con tus palabras o parte con un ejemplo.</p>
       <div class="opts">${["Quiero una plataforma para mi club de tenis Providencia","Un panel para mi restaurante que junte Instagram, WhatsApp, llamadas y correo","Un portal para apoderados de mi colegio","Una plataforma para mi consulta de kinesiología"].map(x=>`<button type="button" class="opt" data-idea="${esc(x)}">${esc(x)}</button>`).join("")}</div></div></div>`;
   }
@@ -821,6 +831,9 @@ function renderStage(){
   $("#stageNote").textContent = `${sp.modules.length} secciones · menú ${({top:"superior",side:"lateral",bottom:"inferior"})[sp.nav]}${sp.nav==="top"&&device==="mob"?" (en móvil pasa abajo)":""}`;
 }
 $("#canvas").addEventListener("click", e=>{
+  const rs=e.target.closest("[data-restore]"); if(rs){ const v=S.versions.find(x=>x.n===+rs.dataset.restore); if(!v) return; snapshot(); S.spec=Object.assign(emptySpec(), clone(v.spec)); S.question=null;
+    recordMap({said:"Restaurar la versión v"+v.n, built:["Volví a la versión v"+v.n+" ("+fmtTime(v.at)+")"]}); S.log.push({who:"ai", text:"Restauré la versión v"+v.n+". Puedes seguir pidiendo cambios desde aquí.", changes:["Versión v"+v.n+" restaurada"]}); save(); renderAll(); return; }
+  if(e.target.closest("#copyLog")){ const b=e.target.closest("#copyLog"); navigator.clipboard.writeText(changelogText()).then(()=>{b.textContent="Registro copiado";},()=>{b.textContent="No se pudo copiar";}); return; }
   const ap=e.target.closest("[data-apage]"); if(ap){ S.apage=ap.dataset.apage; save(); renderStage(); return; }
   const cv=e.target.closest("[data-conv]"); if(cv){ const i=+cv.dataset.conv; S.inbox.sel=i; if(!S.inbox.read.includes(i)) S.inbox.read.push(i); if(!/^(a_bandeja|ch_)/.test(S.apage)) S.apage="a_bandeja"; save(); renderStage(); return; }
   const fl=e.target.closest("[data-filter]"); if(fl){ S.inbox.filter=fl.dataset.filter; save(); renderStage(); return; }
@@ -831,7 +844,7 @@ $("#canvas").addEventListener("click", e=>{
   const fq=e.target.closest("[data-faq]"); if(fq){ const k=+fq.dataset.faq; S.faqOff = S.faqOff.includes(k) ? S.faqOff.filter(x=>x!==k) : [...S.faqOff,k]; save(); renderStage(); return; }
   const cn=e.target.closest("[data-connect]"); if(cn){ const id=cn.dataset.connect, chs=S.spec.channels||[]; snapshot(); const on=!chs.includes(id);
     S.spec.channels = on ? [...chs,id] : chs.filter(x=>x!==id);
-    S.map.push({said:(on?"Conectar ":"Desconectar ")+CH[id].label, built:[on?"Pestaña "+CH[id].label+" en el panel":"Quité la pestaña "+CH[id].label, "Bandeja unificada con "+S.spec.channels.length+" canales"]});
+    recordMap({said:(on?"Conectar ":"Desconectar ")+CH[id].label, built:[on?"Pestaña "+CH[id].label+" en el panel":"Quité la pestaña "+CH[id].label, "Bandeja unificada con "+S.spec.channels.length+" canales"]});
     save(); renderStage(); return; }
   const pg=e.target.closest("[data-page]"); if(pg){ S.page=pg.dataset.page; save(); renderStage(); return; }
   const sl=e.target.closest(".pv-slot.free,.pv-slot.mine"); if(sl){ const k=sl.dataset.k; S.booked = S.booked.includes(k) ? S.booked.filter(x=>x!==k) : [...S.booked,k]; save(); renderStage(); return; }
@@ -991,10 +1004,12 @@ async function draftAI(i, btn){
 
 function planHTML(){
   const sp=S.spec;
-  return `<div class="plan"><div><h2>Plano de ${esc(sp.name||"tu plataforma")}</h2><p class="lead">Cada cosa que dijiste y en qué se convirtió dentro de la plataforma. Esta especificación es la que después se construye de verdad.</p></div>
-    ${S.map.length?`<div style="overflow-x:auto"><table class="maptbl"><thead><tr><th>Lo que dijiste</th><th>Lo que se construyó</th></tr></thead><tbody>${S.map.map(r=>`<tr><td>“${esc(r.said)}”</td><td>${(r.built||[]).map(b=>`<span class="chg">${esc(b)}</span>`).join(" ")}</td></tr>`).join("")}</tbody></table></div>`:`<p class="lead">Todavía no hay respuestas. Empieza la conversación a la izquierda.</p>`}
+  return `<div class="plan"><div><h2>Plano de ${esc(sp.name||"tu plataforma")}</h2><p class="lead">Cada pedido guarda una versión nueva: qué dijiste, qué se construyó y cuándo. Esta especificación es la que después se construye de verdad.</p></div>
+    <div class="pv-row" style="gap:10px"><h2 style="font-size:18px">Historial de versiones</h2>${S.versions.length?`<button type="button" class="tbtn" id="copyLog">Copiar registro</button>`:""}</div>
+    ${S.versions.length?`<div style="overflow-x:auto"><table class="maptbl"><thead><tr><th>Versión</th><th>Lo que dijiste</th><th>Lo que se construyó</th><th></th></tr></thead><tbody>${[...S.versions].reverse().map((v,i)=>`<tr><td style="width:auto;font-style:normal;white-space:nowrap"><b>v${v.n}</b>${i===0?' <span class="chg" style="background:transparent">actual</span>':""}<br><span style="color:var(--muted);font-size:12px">${esc(fmtTime(v.at))}</span></td><td>“${esc(v.said)}”</td><td>${v.built.map(b=>`<span class="chg">${esc(b)}</span>`).join(" ")}</td><td>${i===0?"":`<button type="button" class="tbtn" data-restore="${v.n}">Restaurar</button>`}</td></tr>`).join("")}</tbody></table></div>`:`<p class="lead">Todavía no hay versiones. Cada respuesta que des guarda una versión nueva de la plataforma, y puedes volver a cualquiera.</p>`}
     <div class="pv-row" style="gap:10px"><h2 style="font-size:18px">Especificación (JSON)</h2><button type="button" class="tbtn" id="copyJson">Copiar JSON</button></div>
-    <pre class="json" id="jsonPre">${esc(JSON.stringify(stripIds(sp),null,2))}</pre></div>`;
+    <pre class="json" id="jsonPre">${esc(JSON.stringify(stripIds(sp),null,2))}</pre>
+    <p class="lead" style="font-family:var(--f-mono);font-size:12px">Andamio v${APP_VERSION}</p></div>`;
 }
 
 /* ---------- Header controls ---------- */
