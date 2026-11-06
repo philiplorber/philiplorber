@@ -4,7 +4,7 @@
 
 ---
 
-## Sesión 2026-11-06 · 12:30 a 12:50 (hora de Chile) · versión v0.5.0
+## Sesión 2026-11-06 · 12:30 a 12:37 (hora de Chile) · versión v0.5.0
 
 ### Encargo
 Cerrar las brechas de la revisión: aplicar prácticas de ingeniería, DevOps y seguridad explicadas en simple; rediseñar la entrada (una sola acción y el resto progresivo); estudiar el flujo de entrada de Amboras; investigar equivalentes en Chile y Latinoamérica; dejar registro y metacognición.
