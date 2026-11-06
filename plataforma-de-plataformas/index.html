@@ -1,0 +1,780 @@
+<title>Andamio</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: two working panes — the conversation (left) that maps words into a spec, and a live device preview (right) of the platform being built. */
+:root{
+  --paper:#ECEFF3; --panel:#FFFFFF; --ink:#131922; --muted:#586374; --line:#D3D9E1;
+  --accent:#2346D8; --accent-ink:#FFFFFF; --accent-soft:#E3E8FB; --ok:#1C7A4B; --warn:#9A5800;
+  --f-display:"Bricolage Grotesque", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  --f-body:"Instrument Sans", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#0E1217; --panel:#161C24; --ink:#E6EBF2; --muted:#98A3B4; --line:#29313C;
+  --accent:#8199FF; --accent-ink:#0E1217; --accent-soft:#1E2848; --ok:#52C48A; --warn:#E3A44A; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#0E1217; --panel:#161C24; --ink:#E6EBF2; --muted:#98A3B4; --line:#29313C;
+  --accent:#8199FF; --accent-ink:#0E1217; --accent-soft:#1E2848; --ok:#52C48A; --warn:#E3A44A; color-scheme:dark}
+
+html,body{height:100%}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5}
+*{box-sizing:border-box}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.app{display:grid;grid-template-rows:auto 1fr;height:100%}
+.top{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding-block:12px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  border-bottom:1px solid var(--line);background:var(--panel)}
+.brand{display:flex;align-items:baseline;gap:10px;min-width:0}
+.brand b{font-family:var(--f-display);font-weight:800;font-size:22px;letter-spacing:-.02em}
+.brand span{color:var(--muted);font-size:13px}
+.mark{width:26px;height:26px;align-self:center;flex:none}
+.top .sp{flex:1}
+.badge{display:inline-flex;align-items:center;gap:7px;font-family:var(--f-mono);font-size:12px;padding:5px 10px;border:1px solid var(--line);border-radius:999px;background:transparent}
+.badge i{width:8px;height:8px;border-radius:50%;background:var(--muted)}
+.badge.on i{background:var(--ok)}
+.tbtn{border:1px solid var(--line);background:transparent;border-radius:8px;padding:6px 11px;font-size:13px}
+.tbtn:hover{border-color:var(--ink)}
+.tbtn:disabled{opacity:.4;cursor:default}
+
+main{display:grid;grid-template-columns:minmax(340px,430px) 1fr;min-height:0}
+.chat{display:grid;grid-template-rows:1fr auto;min-height:0;border-right:1px solid var(--line);background:var(--panel)}
+.log{overflow:auto;padding:20px max(16px,env(safe-area-inset-left,0px)) 12px max(16px,env(safe-area-inset-left,0px));display:flex;flex-direction:column;gap:14px}
+.msg{max-width:100%;min-width:0}
+.msg.me{align-self:flex-end;background:var(--accent);color:var(--accent-ink);padding:9px 13px;border-radius:14px 14px 4px 14px;max-width:85%}
+.msg.ai .who{font-family:var(--f-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.msg.ai p{margin:0 0 6px}
+.changes{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 4px}
+.chg{font-family:var(--f-mono);font-size:11.5px;padding:3px 8px;border-radius:6px;background:var(--accent-soft);color:var(--ink)}
+.chg::before{content:"→ ";color:var(--accent)}
+.q{margin-top:8px;border:1px solid var(--line);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:10px}
+.q h3{margin:0;font-family:var(--f-display);font-size:18px;font-weight:700;line-height:1.25;text-wrap:balance}
+.q .hint{color:var(--muted);font-size:13px;margin:-4px 0 0}
+.opts{display:flex;flex-wrap:wrap;gap:8px}
+.opt{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:7px 13px;font-size:14px;text-align:left}
+.opt:hover{border-color:var(--accent)}
+.opt[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.opt[aria-pressed="true"]::before{content:"✓";font-weight:700}
+.sw{display:inline-flex}
+.sw i{width:14px;height:14px;border-radius:50%;border:1px solid rgba(0,0,0,.15);margin-left:-4px}
+.sw i:first-child{margin-left:0}
+.qrow{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.go{background:var(--ink);color:var(--paper);border:0;border-radius:8px;padding:8px 14px;font-weight:600}
+.skip{background:none;border:0;color:var(--muted);text-decoration:underline;font-size:13px}
+.blind{border-left:3px solid var(--warn);padding:8px 12px;background:color-mix(in srgb,var(--warn) 9%,transparent);border-radius:0 10px 10px 0;margin-top:8px}
+.blind b{display:block;font-size:13px;color:var(--warn);font-family:var(--f-mono);letter-spacing:.04em;text-transform:uppercase;margin-bottom:4px}
+.blind ul{margin:0;padding-left:18px}
+.think{color:var(--muted);font-style:italic;display:flex;gap:10px;align-items:center}
+.composer{border-top:1px solid var(--line);padding:12px max(16px,env(safe-area-inset-right,0px)) 14px max(16px,env(safe-area-inset-left,0px));display:flex;gap:8px;align-items:flex-end}
+.composer textarea{flex:1;min-width:0;resize:none;border:1px solid var(--line);border-radius:10px;background:var(--paper);color:var(--ink);padding:10px 12px;font:inherit;min-height:44px;max-height:140px}
+.send{background:var(--accent);color:var(--accent-ink);border:0;border-radius:10px;padding:0 16px;height:44px;font-weight:600}
+
+.stage{min-width:0;min-height:0;display:grid;grid-template-rows:auto 1fr}
+.stagebar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding-block:10px;padding-left:20px;padding-right:max(16px,env(safe-area-inset-right,0px))}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:9px;overflow:hidden}
+.seg button{border:0;background:transparent;padding:6px 12px;font-size:13px}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.stagebar .note{color:var(--muted);font-size:13px;font-family:var(--f-mono)}
+.canvas{overflow:auto;padding:4px 20px 28px;padding-right:max(16px,env(safe-area-inset-right,0px))}
+.device{margin:0 auto;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--panel);box-shadow:0 18px 50px -24px rgba(10,20,40,.35);max-width:100%;transition:width .25s ease}
+.device.desk{width:100%;max-width:1080px}
+.device.mob{width:390px}
+.chrome{display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:1px solid var(--line);font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+.chrome i{width:9px;height:9px;border-radius:50%;background:var(--line)}
+.chrome .url{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;background:var(--paper);border-radius:6px;padding:3px 10px;margin-left:6px}
+
+/* ---- Plano (spec) ---- */
+.plan{max-width:900px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+.plan h2{font-family:var(--f-display);font-size:24px;margin:0}
+.plan .lead{color:var(--muted);margin:0;max-width:65ch}
+.maptbl{width:100%;border-collapse:collapse;font-size:14px}
+.maptbl th{text-align:left;font-family:var(--f-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding:8px}
+.maptbl td{border-bottom:1px solid var(--line);padding:10px 8px;vertical-align:top}
+.maptbl td:first-child{width:40%;font-style:italic}
+pre.json{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px;font-family:var(--f-mono);font-size:12.5px;overflow:auto;max-height:420px;margin:0}
+
+/* ---- Preview platform (pv-*) uses colors chosen by the user ---- */
+.pv{background:var(--pbg);color:var(--pfg);font-family:var(--f-body);min-height:560px;display:flex;flex-direction:column}
+.pv.side{flex-direction:row}
+.pv-head{display:flex;align-items:center;gap:14px;padding:12px 18px;background:var(--phead);color:var(--pheadfg);flex-wrap:wrap}
+.pv-logo{display:flex;align-items:center;gap:10px;font-family:var(--f-display);font-weight:800;font-size:17px;letter-spacing:-.01em;min-width:0}
+.pv-logo i{width:32px;height:32px;border-radius:9px;background:var(--a);color:var(--afg);display:grid;place-items:center;font-style:normal;font-size:13px;flex:none}
+.pv-nav{display:flex;gap:4px;flex-wrap:nowrap;overflow-x:auto;margin-left:auto;max-width:100%}
+.pv-nav button{border:0;background:transparent;color:inherit;padding:7px 11px;border-radius:8px;font-size:13.5px;white-space:nowrap;opacity:.85}
+.pv-nav button[aria-current="page"]{background:color-mix(in srgb,var(--pheadfg) 16%,transparent);opacity:1;font-weight:600}
+.pv-side{width:210px;flex:none;background:var(--phead);color:var(--pheadfg);padding:16px 12px;display:flex;flex-direction:column;gap:14px}
+.pv-side .pv-nav{flex-direction:column;margin:0;overflow:visible}
+.pv-side .pv-nav button{text-align:left;display:flex;gap:10px;align-items:center}
+.pv-body{flex:1;min-width:0;padding:22px;display:flex;flex-direction:column;gap:20px}
+.pv-tabbar{display:flex;justify-content:space-around;border-top:1px solid var(--pline);background:var(--pcard);padding:6px 4px 8px;position:sticky;bottom:0}
+.pv-tabbar button{border:0;background:none;color:var(--pmuted);display:flex;flex-direction:column;align-items:center;gap:2px;font-size:10.5px;padding:4px 6px;min-width:0}
+.pv-tabbar button[aria-current="page"]{color:var(--p)}
+.pv-tabbar svg,.pv-side svg,.pv-card svg{width:20px;height:20px;flex:none}
+.pv-hero{border-radius:16px;padding:26px;background:var(--p);color:var(--pfgon);display:flex;flex-direction:column;gap:10px;position:relative;overflow:hidden}
+.pv-hero::after{content:"";position:absolute;right:-60px;top:-60px;width:220px;height:220px;border-radius:50%;border:26px solid color-mix(in srgb,var(--a) 70%,transparent)}
+.pv-hero h1{margin:0;font-family:var(--f-display);font-size:30px;line-height:1.1;letter-spacing:-.02em;max-width:22ch;text-wrap:balance;position:relative}
+.pv-hero p{margin:0;opacity:.9;max-width:48ch;position:relative}
+.pv-cta{align-self:flex-start;border:0;border-radius:10px;padding:10px 18px;font-weight:700;background:var(--a);color:var(--afg);position:relative}
+.pv-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}
+.pv-stat{background:var(--pcard);border:1px solid var(--pline);border-radius:12px;padding:12px 14px}
+.pv-stat b{display:block;font-family:var(--f-display);font-size:22px;font-variant-numeric:tabular-nums}
+.pv-stat span{font-size:12px;color:var(--pmuted);text-transform:uppercase;letter-spacing:.05em}
+.pv-h2{margin:0;font-family:var(--f-display);font-size:20px}
+.pv-sub{margin:-12px 0 0;color:var(--pmuted);font-size:13.5px}
+.pv-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px}
+.pv-card{background:var(--pcard);border:1px solid var(--pline);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:6px;text-align:left;color:inherit}
+button.pv-card:hover{border-color:var(--p)}
+.pv-card svg{color:var(--p)}
+.pv-card b{font-size:15px}
+.pv-card span{font-size:13px;color:var(--pmuted)}
+.pv-tag{display:inline-block;font-size:11px;font-weight:600;padding:2px 8px;border-radius:999px;background:color-mix(in srgb,var(--p) 14%,transparent);color:var(--pfg)}
+.pv-ex{font-family:var(--f-mono);font-size:11px;color:var(--pmuted)}
+.pv-tblwrap{overflow-x:auto;border:1px solid var(--pline);border-radius:12px;background:var(--pcard)}
+.pv-tbl{border-collapse:collapse;width:100%;font-size:13px;font-variant-numeric:tabular-nums}
+.pv-tbl th,.pv-tbl td{padding:7px 9px;border-bottom:1px solid var(--pline);text-align:left;white-space:nowrap}
+.pv-tbl th{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--pmuted)}
+.pv-slot{border:1px solid var(--pline);background:transparent;color:var(--pfg);border-radius:7px;padding:4px 8px;font-size:12px;min-width:70px}
+.pv-slot.busy{background:color-mix(in srgb,var(--pfg) 8%,transparent);color:var(--pmuted);cursor:not-allowed;border-style:dashed}
+.pv-slot.mine{background:var(--a);color:var(--afg);border-color:var(--a);font-weight:700}
+.pv-slot.free:hover{border-color:var(--p)}
+.pv-row{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}
+.pv-btn{border:0;border-radius:9px;padding:8px 14px;font-weight:600;background:var(--p);color:var(--pfgon)}
+.pv-gal{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.pv-gal div{aspect-ratio:4/3;border-radius:10px;max-width:100%}
+.pv-input{border:1px solid var(--pline);background:var(--pbg);color:var(--pfg);border-radius:8px;padding:9px 11px;font:inherit;width:100%}
+.ghost{min-height:560px;display:grid;place-items:center;padding:30px;text-align:center;color:var(--muted);background:
+  repeating-linear-gradient(0deg,transparent 0 23px,color-mix(in srgb,var(--line) 70%,transparent) 23px 24px),
+  repeating-linear-gradient(90deg,transparent 0 23px,color-mix(in srgb,var(--line) 70%,transparent) 23px 24px),var(--paper)}
+.ghost h2{font-family:var(--f-display);color:var(--ink);font-size:26px;margin:0 0 8px;text-wrap:balance}
+.ghost p{max-width:44ch;margin:0 auto}
+
+@media (max-width:900px){
+  html,body{height:auto}
+  .app{height:auto}
+  main{grid-template-columns:1fr}
+  .chat{border-right:0;border-bottom:1px solid var(--line)}
+  .log{max-height:none}
+  .stagebar,.canvas{padding-left:max(16px,env(safe-area-inset-left,0px))}
+  .pv.side{flex-direction:column}
+  .pv-side{width:auto}
+  .pv-side .pv-nav{flex-direction:row;overflow-x:auto}
+  .pv-hero h1{font-size:24px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+@keyframes pulse{0%,100%{opacity:.35}50%{opacity:1}}
+.dots i{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--muted);margin-right:3px;animation:pulse 1s infinite}
+.dots i:nth-child(2){animation-delay:.2s}.dots i:nth-child(3){animation-delay:.4s}
+</style>
+
+<div class="app">
+  <header class="top">
+    <div class="brand">
+      <svg class="mark" viewBox="0 0 26 26" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 23V3M22 23V3M4 8h18M4 15h18M4 8l18 7"/></g></svg>
+      <b>Andamio</b><span>la plataforma que arma plataformas</span>
+    </div>
+    <div class="sp"></div>
+    <button class="badge" id="engineBadge" type="button" title="Cambiar motor"><i></i><span>Conectando IA…</span></button>
+    <button class="tbtn" id="undoBtn" type="button" disabled>Deshacer</button>
+    <button class="tbtn" id="resetBtn" type="button">Empezar de nuevo</button>
+  </header>
+  <main>
+    <section class="chat" aria-label="Conversación">
+      <div class="log" id="log" aria-live="polite"></div>
+      <form class="composer" id="composer">
+        <textarea id="input" rows="1" placeholder="Describe tu plataforma…"></textarea>
+        <button class="send" type="submit">Enviar</button>
+      </form>
+    </section>
+    <section class="stage" aria-label="Vista previa">
+      <div class="stagebar">
+        <div class="seg" role="group" aria-label="Vista">
+          <button type="button" id="tabPrev" aria-pressed="true">Vista previa</button>
+          <button type="button" id="tabPlan" aria-pressed="false">Plano</button>
+        </div>
+        <div class="seg" role="group" aria-label="Dispositivo" id="devSeg">
+          <button type="button" id="devDesk" aria-pressed="true">Escritorio</button>
+          <button type="button" id="devMob" aria-pressed="false">Móvil</button>
+        </div>
+        <span class="note" id="stageNote"></span>
+      </div>
+      <div class="canvas" id="canvas"></div>
+    </section>
+  </main>
+</div>
+
+<script>
+(() => {
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const clone = o => JSON.parse(JSON.stringify(o));
+const clp = n => "$" + Math.round(n).toLocaleString("es-CL");
+
+/* ---------- Module types the builder knows how to draw ---------- */
+const TYPES = ["reservas","ranking","torneos","clases","pagos","noticias","tienda","socios","galeria","agenda","contacto","dashboard","lista"];
+const ICON = {
+  home:'<path d="M3 11l9-7 9 7v9a1 1 0 01-1 1h-5v-6H9v6H4a1 1 0 01-1-1z"/>',
+  reservas:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4M8 15l2.5 2.5L16 13"/>',
+  ranking:'<path d="M5 21V12M12 21V5M19 21v-6"/>',
+  torneos:'<path d="M7 4h10v5a5 5 0 01-10 0zM12 14v4M8 21h8M7 6H4a3 3 0 003 4M17 6h3a3 3 0 01-3 4"/>',
+  clases:'<circle cx="12" cy="7" r="3.5"/><path d="M5 21a7 7 0 0114 0"/>',
+  pagos:'<rect x="2.5" y="5.5" width="19" height="13" rx="2"/><path d="M2.5 10h19M6 15h4"/>',
+  noticias:'<path d="M4 5h13v14H6a2 2 0 01-2-2zM17 9h3v8a2 2 0 01-2 2M7 9h7M7 13h7"/>',
+  tienda:'<path d="M5 8h14l-1 12H6zM9 8V6a3 3 0 016 0v2"/>',
+  socios:'<rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2.2"/><path d="M5.5 16a3.6 3.6 0 017 0M14 10h4M14 13h3"/>',
+  galeria:'<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="1.8"/><path d="M3 17l5-4 4 3 3-2 6 4"/>',
+  agenda:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4M7 14h3M7 17h6"/>',
+  contacto:'<path d="M12 21s-7-6.2-7-11a7 7 0 0114 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/>',
+  dashboard:'<rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/>',
+  lista:'<path d="M9 6h12M9 12h12M9 18h12M4 6h.01M4 12h.01M4 18h.01"/>'
+};
+const icon = t => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON[t] || ICON.lista}</svg>`;
+
+/* ---------- Domain knowledge for the guided (offline) engine ---------- */
+const DOMAINS = {
+  club: {
+    unit:"Cancha", noun:"club",
+    catalog:[
+      {type:"reservas",label:"Reservar cancha",desc:"Elige día, hora y cancha"},
+      {type:"ranking",label:"Escalerilla",desc:"Ranking interno y desafíos"},
+      {type:"torneos",label:"Torneos",desc:"Inscripciones, cuadros y resultados"},
+      {type:"clases",label:"Clases",desc:"Profesores, niveles y horarios"},
+      {type:"pagos",label:"Cuotas",desc:"Mensualidades y pago online"},
+      {type:"noticias",label:"Noticias",desc:"Comunicados del club"},
+      {type:"tienda",label:"Pro shop",desc:"Raquetas, pelotas y encordado"},
+      {type:"socios",label:"Mi perfil",desc:"Datos del socio y su grupo familiar"},
+      {type:"galeria",label:"Galería",desc:"Fotos de torneos y eventos"}
+    ],
+    objectives:[
+      {label:"Reservas y gestión de socios",mods:["reservas","pagos","socios","noticias"],tag:"Reserva tu cancha en segundos y mantén tu cuota al día."},
+      {label:"Competencia: escalerilla y torneos",mods:["ranking","torneos","reservas","noticias"],tag:"Desafía, compite y sigue tu ranking dentro del club."},
+      {label:"Escuela de tenis",mods:["clases","reservas","pagos","noticias"],tag:"Clases para todas las edades, con profesores del club."},
+      {label:"Club completo (todo lo anterior)",mods:["reservas","ranking","torneos","clases","pagos","noticias"],tag:"Reserva, juega, aprende y compite en un solo lugar."}
+    ],
+    audiences:["Socios adultos","Juveniles y apoderados","Profesores","Administración del club","Visitas / no socios"],
+    audPre:[0,1,3],
+    palettes:[
+      {label:"Arcilla y verde club",primary:"#B5502A",accent:"#1F4D36",surface:"light"},
+      {label:"Azul marino y amarillo pelota",primary:"#1D3F72",accent:"#D9E43C",surface:"light"},
+      {label:"Verde césped y dorado",primary:"#1E5E3B",accent:"#E8C547",surface:"light"},
+      {label:"Nocturno: grafito y lima",primary:"#C8E04B",accent:"#5FA8FF",surface:"dark"}
+    ],
+    home:[
+      {label:"Botón grande: Reservar cancha",mod:"reservas",cta:"Reservar cancha"},
+      {label:"Escalerilla y próximos partidos",mod:"ranking",cta:"Ver escalerilla"},
+      {label:"Noticias y eventos del club",mod:"noticias",cta:"Ver novedades"},
+      {label:"Inscripción a clases",mod:"clases",cta:"Inscribirme a clases"}
+    ],
+    blind:[
+      "Reglas de reserva: con cuánta anticipación, cuántas horas por socio a la semana y política de cancelación.",
+      "Invitados y no socios: ¿pueden reservar o pagar un green fee?",
+      "Lluvia y mantención: cierre de canchas y aviso automático a quienes tenían reserva.",
+      "Iluminación nocturna: ¿se cobra aparte?",
+      "Roles: quién aprueba socios nuevos, edita torneos y ve los pagos.",
+      "Medio de pago real (Webpay, transferencia) y emisión de boletas."
+    ]
+  },
+  resto: {
+    unit:"Mesa", noun:"local",
+    catalog:[
+      {type:"reservas",label:"Reservar mesa",desc:"Día, hora y número de personas"},
+      {type:"tienda",label:"Carta y pedidos",desc:"Platos, precios y pedido para llevar"},
+      {type:"agenda",label:"Eventos",desc:"Noches temáticas y celebraciones"},
+      {type:"noticias",label:"Novedades",desc:"Platos de temporada y avisos"},
+      {type:"galeria",label:"Galería",desc:"Fotos del local y la cocina"},
+      {type:"contacto",label:"Cómo llegar",desc:"Dirección, horario y contacto"}
+    ],
+    objectives:[
+      {label:"Reservas de mesas",mods:["reservas","tienda","contacto"],tag:"Reserva tu mesa sin llamar."},
+      {label:"Pedidos para llevar",mods:["tienda","contacto","noticias"],tag:"Pide online y retira sin esperar."},
+      {label:"Eventos y comunidad",mods:["agenda","galeria","reservas","noticias"],tag:"Lo que pasa en nuestra mesa, cada semana."}
+    ],
+    audiences:["Clientes frecuentes","Turistas","Empresas / eventos","Equipo de sala"],
+    audPre:[0,1],
+    palettes:[
+      {label:"Vino y crema",primary:"#7A1E33",accent:"#E9C46A",surface:"light"},
+      {label:"Oliva y negro",primary:"#4B5A2A",accent:"#111111",surface:"light"},
+      {label:"Noche: carbón y cobre",primary:"#D8894A",accent:"#F2E2C4",surface:"dark"}
+    ],
+    home:[
+      {label:"Botón: Reservar mesa",mod:"reservas",cta:"Reservar mesa"},
+      {label:"La carta primero",mod:"tienda",cta:"Ver la carta"},
+      {label:"Próximos eventos",mod:"agenda",cta:"Ver eventos"}
+    ],
+    blind:["Política de no-show o abono por reserva.","Alérgenos y opciones veganas en la carta.","Quién actualiza la carta y los precios.","Integración con delivery (Rappi, Uber Eats) o solo retiro."]
+  },
+  edu: {
+    unit:"Sala", noun:"institución",
+    catalog:[
+      {type:"agenda",label:"Calendario",desc:"Pruebas, reuniones y actividades"},
+      {type:"noticias",label:"Comunicados",desc:"Avisos a apoderados y alumnos"},
+      {type:"clases",label:"Cursos",desc:"Asignaturas, horarios y profesores"},
+      {type:"pagos",label:"Pagos",desc:"Mensualidades y matrícula"},
+      {type:"socios",label:"Ficha del alumno",desc:"Datos, notas y asistencia"},
+      {type:"contacto",label:"Contacto",desc:"Secretaría y horarios"}
+    ],
+    objectives:[
+      {label:"Comunicación con apoderados",mods:["noticias","agenda","contacto"],tag:"Todo lo que pasa en el curso, en un solo lugar."},
+      {label:"Gestión académica",mods:["clases","socios","agenda"],tag:"Cursos, horarios y avance de cada alumno."},
+      {label:"Matrícula y pagos",mods:["pagos","socios","noticias"],tag:"Matricula y paga sin filas."}
+    ],
+    audiences:["Apoderados","Alumnos","Profesores","Dirección / administración"],
+    audPre:[0,2],
+    palettes:[
+      {label:"Azul institucional y rojo",primary:"#1D3F72",accent:"#C2372F",surface:"light"},
+      {label:"Verde y amarillo",primary:"#21613E",accent:"#F2C230",surface:"light"},
+      {label:"Burdeo y gris",primary:"#6E1F35",accent:"#B9C0C9",surface:"light"}
+    ],
+    home:[
+      {label:"Último comunicado",mod:"noticias",cta:"Leer comunicados"},
+      {label:"Calendario de la semana",mod:"agenda",cta:"Ver calendario"},
+      {label:"Estado de pagos",mod:"pagos",cta:"Pagar mensualidad"}
+    ],
+    blind:["Datos de menores: consentimiento y quién puede ver qué (Ley 19.628).","Roles separados para apoderado, alumno y profesor.","Notificaciones por correo o WhatsApp para comunicados urgentes.","Integración con el sistema de notas que ya usan."]
+  },
+  generic: {
+    unit:"Espacio", noun:"organización",
+    catalog:[
+      {type:"dashboard",label:"Panel",desc:"Resumen de lo importante"},
+      {type:"agenda",label:"Agenda",desc:"Citas, eventos y fechas"},
+      {type:"reservas",label:"Reservas",desc:"Agenda horas o espacios"},
+      {type:"tienda",label:"Catálogo",desc:"Productos o servicios con precio"},
+      {type:"pagos",label:"Pagos",desc:"Cobros y estado de cuenta"},
+      {type:"noticias",label:"Novedades",desc:"Anuncios y publicaciones"},
+      {type:"socios",label:"Mi cuenta",desc:"Perfil y preferencias"},
+      {type:"contacto",label:"Contacto",desc:"Dónde estamos y cómo escribirnos"}
+    ],
+    objectives:[
+      {label:"Vender productos o servicios",mods:["tienda","pagos","contacto"],tag:"Lo que ofrecemos, a un clic."},
+      {label:"Agendar y reservar",mods:["reservas","agenda","socios"],tag:"Reserva tu hora cuando quieras."},
+      {label:"Comunidad e información",mods:["noticias","agenda","socios"],tag:"Mantente al día con nosotros."},
+      {label:"Gestión interna del equipo",mods:["dashboard","agenda","socios"],tag:"El trabajo del equipo, ordenado."}
+    ],
+    audiences:["Clientes","Equipo interno","Proveedores","Público general"],
+    audPre:[0],
+    palettes:[
+      {label:"Azul confianza y naranja",primary:"#1F4FA3",accent:"#F28C28",surface:"light"},
+      {label:"Verde petróleo y arena",primary:"#14605F",accent:"#E7C88F",surface:"light"},
+      {label:"Grafito y coral",primary:"#2B2F36",accent:"#FF6F59",surface:"light"},
+      {label:"Oscuro: noche y turquesa",primary:"#3CC6B5",accent:"#F5D547",surface:"dark"}
+    ],
+    home:[
+      {label:"Un botón de acción principal",mod:null,cta:null},
+      {label:"Novedades",mod:"noticias",cta:"Ver novedades"},
+      {label:"Panel con indicadores",mod:"dashboard",cta:"Ver panel"}
+    ],
+    blind:["Quién administra el contenido y con qué permisos.","Inicio de sesión: correo, Google o RUT.","Datos personales y privacidad (Ley 19.628).","Notificaciones: correo, push o WhatsApp.","Qué medir desde el día uno (visitas, conversiones)."]
+  }
+};
+const COLOR_WORDS = {azul:"#1D4ED8",marino:"#1D3F72",celeste:"#3B9BD6",verde:"#1E6B43",lima:"#B7D63C",rojo:"#B42318",burdeo:"#7A1E33",naranja:"#E07020",arcilla:"#B5502A",amarillo:"#E5B800",dorado:"#C9A13B",negro:"#16181C",gris:"#5B6470",morado:"#6D28D9",violeta:"#7C3AED",rosado:"#D9467A",turquesa:"#14A3A0",cafe:"#6B4226","café":"#6B4226",blanco:"#FFFFFF"};
+
+function detectDomain(t){
+  t = t.toLowerCase();
+  if (/tenis|p[aá]del|f[uú]tbol|golf|club deportivo|gimnasio|gym|squash|nataci[oó]n|cancha/.test(t)) return "club";
+  if (/restaur|caf[eé]|bar\b|cocina|comida|pizzer|sushi/.test(t)) return "resto";
+  if (/colegio|escuela|jard[ií]n infantil|academia|liceo|universidad|preuniversitario|curso/.test(t)) return "edu";
+  return "generic";
+}
+function guessName(t){
+  let s = t.trim().replace(/[.!?]+$/,"");
+  s = s.replace(/^.*?\bpara\s+(mi|mis|el|la|los|las|nuestro|nuestra|un|una)?\s*/i, "") || s;
+  s = s.replace(/^(quiero|necesito|crear|hacer)\s+(una\s+)?(plataforma|app|p[aá]gina)\s*(de|del)?\s*/i, "");
+  const small = new Set(["de","del","la","las","el","los","y","en","para"]);
+  return s.split(/\s+/).filter(Boolean).slice(0,6).map((w,i) => (i && small.has(w.toLowerCase())) ? w.toLowerCase() : w[0].toUpperCase()+w.slice(1)).join(" ") || "Mi plataforma";
+}
+function shortName(n){
+  const w = n.split(" ");
+  if (w.length >= 3 && /^club$/i.test(w[0])) {
+    const sport = w.find((x,i)=> i>0 && !/^(de|del|la|el)$/i.test(x));
+    return "C" + (sport ? sport[0].toUpperCase() : "") + " " + w[w.length-1];
+  }
+  return w.slice(-2).join(" ");
+}
+function initials(n){
+  const w = (n||"?").split(/\s+/).filter(x=>!/^(de|del|la|el|y)$/i.test(x));
+  return (w.length > 1 ? w[0][0] + w[w.length-1][0] : (w[0]||"?").slice(0,2)).toUpperCase();
+}
+
+/* ---------- State ---------- */
+function emptySpec(){ return {name:"",tagline:"",kind:"",domain:"",objective:"",audiences:[],modules:[],colors:{primary:"#1D3F72",accent:"#D9E43C",surface:"light"},nav:"top",cta:"",facts:{},stats:[],blindspots:[]}; }
+let S = fresh();
+function fresh(){ return {spec:emptySpec(), log:[], step:0, map:[], page:"home", booked:[], engine:"local", question:null}; }
+const undo = [];
+let sampleFn = null, aiReady = false, aiWanted = true, busy = null;
+
+const KEY = "andamio.v1";
+try { const raw = localStorage.getItem(KEY); if (raw) { const p = JSON.parse(raw); if (p && p.spec && Array.isArray(p.log)) S = Object.assign(fresh(), p); } } catch(e) {}
+function save(){ try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e) {} }
+function snapshot(){ undo.push(JSON.stringify(S)); if (undo.length > 40) undo.shift(); $("#undoBtn").disabled = false; }
+
+function mod(type, label, desc, items){ return {id:"m"+Math.random().toString(36).slice(2,7), type, label, desc:desc||"", items:items||[]}; }
+function D(){ return DOMAINS[S.spec.domain] || DOMAINS.generic; }
+function deriveStats(){
+  const sp = S.spec, f = sp.facts, out = [];
+  if (f.units) out.push({label: (D().unit) + "s", value: String(f.units)});
+  if (f.surface) out.push({label:"Superficie", value:f.surface});
+  if (f.hours) out.push({label:"Horario", value: pad(f.hours[0]) + "–" + pad(f.hours[1]) + " h"});
+  if (sp.audiences.length) out.push({label:"Perfiles de usuario", value:String(sp.audiences.length)});
+  if (out.length < 4 && sp.modules.length) out.push({label:"Secciones", value:String(sp.modules.length)});
+  sp.stats = out.slice(0,4);
+}
+const pad = n => String(n).padStart(2,"0");
+
+/* ---------- Guided engine: one question at a time, each answer edits the spec ---------- */
+const FLOW = [
+  { key:"objective", build(){ const d=D(); return {text:`¿Cuál es el objetivo principal de la plataforma de ${S.spec.name}?`, hint:"Elige uno. Define qué secciones propongo después.", multi:false, options:d.objectives.map(o=>({label:o.label}))}; },
+    apply(sel, free){ const d=D(); const o=d.objectives.find(x=>x.label===sel[0]); if(!o){ if(!free) return []; S.spec.objective=free; return ["Objetivo: "+free]; }
+      S.spec.objective=o.label; S.spec.tagline=o.tag;
+      S.spec.modules=o.mods.map(t=>{const c=d.catalog.find(x=>x.type===t); return mod(t,c.label,c.desc);});
+      return [`Objetivo: ${o.label}`, `Menú con ${S.spec.modules.length} secciones`, "Lema de portada"]; }},
+  { key:"audiences", build(){ const d=D(); return {text:"¿Quiénes van a usarla?", hint:"Marca todos los que apliquen. Cada perfil tendrá su propio acceso.", multi:true, options:d.audiences.map((a,i)=>({label:a, selected:d.audPre.includes(i)}))}; },
+    apply(sel, free){ const a=[...sel]; if(free) a.push(...free.split(/,| y /).map(s=>s.trim()).filter(Boolean)); S.spec.audiences=a; return [`${a.length} perfiles de acceso: ${a.join(", ")}`]; }},
+  { key:"modules", build(){ const d=D(); const have=new Set(S.spec.modules.map(m=>m.type));
+      return {text:"Estas son las secciones que propongo. ¿Cuáles quedan?", hint:"Las marcadas ya están en la vista previa. Desmarca lo que sobre, marca lo que falte, o escribe una sección nueva.", multi:true,
+        options:d.catalog.map(c=>({label:c.label, value:c.type, selected:have.has(c.type)}))}; },
+    apply(sel, free){ const d=D(); const before=S.spec.modules.map(m=>m.label);
+      const keep=S.spec.modules.filter(m=>sel.includes(m.type) || m.type==="lista");
+      sel.forEach(t=>{ if(!keep.some(m=>m.type===t)){ const c=d.catalog.find(x=>x.type===t); keep.push(mod(t,c.label,c.desc)); }});
+      if(free) free.split(/,|;/).map(s=>s.trim()).filter(Boolean).forEach(l=>keep.push(mod("lista", l[0].toUpperCase()+l.slice(1), "Sección personalizada")));
+      S.spec.modules=keep;
+      const added=keep.filter(m=>!before.includes(m.label)).map(m=>m.label), removed=before.filter(l=>!keep.some(m=>m.label===l));
+      const ch=[]; if(added.length) ch.push("Agregué: "+added.join(", ")); if(removed.length) ch.push("Quité: "+removed.join(", ")); if(!ch.length) ch.push("Secciones confirmadas");
+      return ch; }},
+  { key:"units", build(){ const dom=S.spec.domain; if(!["club","resto"].includes(dom) || !S.spec.modules.some(m=>m.type==="reservas")) return null;
+      const n = dom==="club" ? [4,6,8,12] : [10,15,20,30];
+      return {text: dom==="club" ? "¿Cuántas canchas tiene el club?" : "¿Cuántas mesas se pueden reservar?", hint:"Arma la grilla de reservas. Si no está, escribe el número.", multi:false, options:n.map(x=>({label:String(x), value:x}))}; },
+    apply(sel, free){ const n=parseInt(free||sel[0],10); if(!n) return []; S.spec.facts.units=Math.min(n,30); return [`Grilla de reservas con ${S.spec.facts.units} ${D().unit.toLowerCase()}s`]; }},
+  { key:"surface", build(){ if(S.spec.domain!=="club" || !/tenis/i.test(S.spec.kind)) return null;
+      return {text:"¿Qué superficie tienen las canchas?", multi:false, options:["Arcilla","Cemento","Pasto sintético","Mixta"].map(l=>({label:l}))}; },
+    apply(sel, free){ S.spec.facts.surface=free||sel[0]; return [`Superficie: ${S.spec.facts.surface}`]; }},
+  { key:"hours", build(){ if(!["club","resto"].includes(S.spec.domain) || !S.spec.modules.some(m=>m.type==="reservas")) return null;
+      const o = S.spec.domain==="club" ? [[7,22],[8,23],[7,21],[6,22]] : [[12,16],[12,23],[19,24]];
+      return {text:"¿En qué horario se puede reservar?", hint:"Bloques de una hora.", multi:false, options:o.map(h=>({label:`${pad(h[0])}:00 a ${pad(h[1])}:00`, value:h.join("-")}))}; },
+    apply(sel, free){ const m=(free||sel[0]||"").match(/(\d{1,2})\D+(\d{1,2})/); if(!m) return []; S.spec.facts.hours=[+m[1],+m[2]]; return [`Horario de reservas ${m[1]}–${m[2]} h`]; }},
+  { key:"colors", build(){ return {text:"¿Qué colores representan al "+D().noun+"?", hint:"Elige una paleta o escribe colores (ej. “azul y blanco”, “fondo oscuro”).", multi:false,
+      options:D().palettes.map(p=>({label:p.label, value:p.label, swatch:[p.primary,p.accent]}))}; },
+    apply(sel, free){ if(free) return applyCommand(free).length ? applyCommand(free,true) : [];
+      const p=D().palettes.find(x=>x.label===sel[0]); if(!p) return []; S.spec.colors={primary:p.primary,accent:p.accent,surface:p.surface}; return [`Paleta: ${p.label}`]; }},
+  { key:"nav", build(){ return {text:"¿Dónde va el menú?", hint:"Cambia la orientación de toda la plataforma.", multi:false,
+      options:[{label:"Arriba, horizontal",value:"top"},{label:"Al costado (tipo panel)",value:"side"},{label:"Abajo, como app de celular",value:"bottom"}]}; },
+    apply(sel, free){ if(!sel[0]) return free ? applyCommand("menú "+free,true) : []; S.spec.nav=sel[0]; if(sel[0]==="bottom") setDevice("mob"); return [`Menú ${({top:"superior",side:"lateral",bottom:"inferior (app)"})[sel[0]]}`]; }},
+  { key:"home", build(){ return {text:"Al entrar, ¿qué debe ver primero la gente?", hint:"Define el botón principal y el orden del menú.", multi:false, options:D().home.map(h=>({label:h.label}))}; },
+    apply(sel, free){ const h=D().home.find(x=>x.label===sel[0]); const ch=[];
+      if(h && h.mod){ let m=S.spec.modules.find(x=>x.type===h.mod); if(!m){ const c=D().catalog.find(x=>x.type===h.mod); m=mod(h.mod,c.label,c.desc); ch.push("Agregué "+c.label); }
+        S.spec.modules=[m,...S.spec.modules.filter(x=>x!==m)]; S.spec.cta=h.cta; ch.push(`Botón principal: “${h.cta}”`, `${m.label} queda primero en el menú`); }
+      else if(S.spec.modules[0]){ S.spec.cta=free || S.spec.modules[0].label; ch.push(`Botón principal: “${S.spec.cta}”`); }
+      return ch; }},
+  { key:"name", build(){ const n=S.spec.name; const opts=[n, shortName(n)]; if(S.spec.domain==="club") opts.push(n.replace(/^Club de /i,"")+" · Socios"); else opts.push(n+" App");
+      return {text:"Último: ¿cómo se llama la plataforma?", hint:"Va en el logo y en la pestaña del navegador.", multi:false, options:[...new Set(opts)].map(l=>({label:l}))}; },
+    apply(sel, free){ S.spec.name=free||sel[0]; return [`Nombre: ${S.spec.name}`]; }}
+];
+
+function localNext(){
+  while (S.step < FLOW.length){
+    const q = FLOW[S.step].build();
+    if (q){ q.key = FLOW[S.step].key; return q; }
+    S.step++;
+  }
+  return null;
+}
+function localStart(text){
+  const sp=S.spec; sp.kind=text; sp.domain=detectDomain(text); sp.name=guessName(text);
+  const d=D(); sp.colors={...d.palettes[0]}; delete sp.colors.label;
+  sp.modules=d.catalog.slice(0,3).map(c=>mod(c.type,c.label,c.desc));
+  sp.tagline="Tu "+d.noun+", en una plataforma hecha a la medida.";
+  sp.cta=sp.modules[0].label;
+  S.step=0;
+  return [`Tipo: ${({club:"club deportivo",resto:"restaurante / local",edu:"educación",generic:"plataforma general"})[sp.domain]}`, `Nombre provisorio: ${sp.name}`, "Borrador con 3 secciones"];
+}
+
+/* Free-text commands that work at any moment ("menú lateral", "agrega galería", "verde y blanco") */
+function applyCommand(t, commit){
+  const s=t.toLowerCase(), ch=[], sp=commit?S.spec:clone(S.spec);
+  const found=[]; Object.keys(COLOR_WORDS).forEach(w=>{ const i=s.indexOf(w); if(i>=0) found.push([i,w]); }); found.sort((a,b)=>a[0]-b[0]);
+  const cols=found.map(f=>f[1]).filter(w=>w!=="blanco");
+  if(cols.length){ sp.colors.primary=COLOR_WORDS[cols[0]]; if(cols[1]) sp.colors.accent=COLOR_WORDS[cols[1]]; else if(/blanco/.test(s)) sp.colors.accent="#FFFFFF"; ch.push("Colores: "+cols.slice(0,2).join(" y ")+(cols.length<2&&/blanco/.test(s)?" y blanco":"")); }
+  if(/oscur|noche|dark/.test(s)){ sp.colors.surface="dark"; ch.push("Fondo oscuro"); }
+  else if(/fondo claro|modo claro/.test(s)){ sp.colors.surface="light"; ch.push("Fondo claro"); }
+  if(/men[uú].*(lateral|costado|izquierd)|(lateral|costado)/.test(s)){ sp.nav="side"; ch.push("Menú lateral"); }
+  else if(/men[uú].*(abajo|inferior)|tipo app|como app/.test(s)){ sp.nav="bottom"; ch.push("Menú inferior (app)"); if(commit) setDevice("mob"); }
+  else if(/men[uú].*(arriba|superior)/.test(s)){ sp.nav="top"; ch.push("Menú superior"); }
+  const add=s.match(/(?:agrega|añade|suma|pon)(?:r)?\s+(?:una?\s+)?(?:secci[oó]n\s+(?:de\s+)?)?(.+)/);
+  if(add){ const want=add[1].trim(); const c=D().catalog.find(x=>x.label.toLowerCase().includes(want)||want.includes(x.label.toLowerCase())||want.includes(x.type));
+    const m=c?mod(c.type,c.label,c.desc):mod("lista",want[0].toUpperCase()+want.slice(1),"Sección personalizada"); sp.modules.push(m); ch.push("Agregué "+m.label); }
+  const rm=s.match(/(?:quita|elimina|saca|borra)(?:r)?\s+(?:la\s+|el\s+)?(?:secci[oó]n\s+(?:de\s+)?)?(.+)/);
+  if(rm){ const want=rm[1].trim(); const m=sp.modules.find(x=>x.label.toLowerCase().includes(want)||want.includes(x.label.toLowerCase())||want.includes(x.type)); if(m){ sp.modules=sp.modules.filter(x=>x!==m); ch.push("Quité "+m.label); } }
+  const nm=t.match(/(?:ll[aá]mala|se llama|nombre(?: es)?:?)\s+["“]?([^"”]+)["”]?/i);
+  if(nm){ sp.name=nm[1].trim(); ch.push("Nombre: "+sp.name); }
+  return ch;
+}
+
+/* ---------- AI engine (Claude via the page's sample capability) ---------- */
+const RULES = `Eres el motor de "Andamio", una plataforma que crea plataformas web a partir de lo que la persona describe en lenguaje natural. Hablas español de Chile, cercano y concreto.
+Tu trabajo: conversar para definir la plataforma haciendo UNA pregunta por turno, con opciones concretas que la persona pueda aceptar o rechazar, y actualizar la especificación (spec) con cada respuesta. Cubre, en el orden que tenga sentido para el rubro: objetivo, perfiles de usuario, secciones del menú, números reales del negocio (ej. canchas, horarios, cupos, precios), colores, orientación del menú (top/side/bottom), qué se ve primero en la portada y el nombre. Propón opciones específicas del rubro (un club de tenis tiene escalerilla, torneos, reservas de cancha, clases; no opciones genéricas).
+Tras unas 8-10 preguntas, o si la persona dice que está listo, termina: "question": null y entrega "blindspots" con 3-5 cosas que podría estar olvidando (reglas, roles, pagos, legal, operación).
+Si la persona pide un cambio directo ("menú lateral", "más oscuro", "agrega pro shop"), aplícalo en el spec y sigue con la pregunta pendiente.
+Responde SOLO con un objeto JSON, sin texto alrededor:
+{"say": "1-2 frases comentando lo que entendiste", "changes": ["frases cortas de lo que cambió en la plataforma"], "spec": SPEC, "question": {"text": "...", "hint": "...", "multi": true|false, "options": [{"label": "...", "selected": true|false, "swatch": ["#hex","#hex"]}]} | null, "blindspots": ["..."]}
+SPEC = {"name": str, "tagline": str, "kind": str, "objective": str, "audiences": [str], "modules": [{"type": uno de ${TYPES.join("|")}, "label": str, "desc": str, "items": [str opcional, contenido de ejemplo]}], "colors": {"primary": "#RRGGBB", "accent": "#RRGGBB", "surface": "light"|"dark"}, "nav": "top"|"side"|"bottom", "cta": str, "facts": {"units": int opcional, "hours": [int,int] opcional, "surface": str opcional}, "stats": [{"label": str, "value": str}] (máx 4)}
+Reglas: máximo 8 módulos; entre 3 y 6 opciones por pregunta; usa "swatch" solo en preguntas de color; en preguntas multi marca "selected" lo que recomiendas; devuelve SIEMPRE el spec completo.`;
+
+function aiPrompt(userText){
+  const convo = S.log.slice(-16).map(m => m.who==="me" ? "PERSONA: "+m.text : "ANDAMIO: "+(m.text||"")+(m.question?` [preguntó: ${m.question.text} | opciones: ${m.question.options.map(o=>o.label).join(" / ")}]`:"")).join("\n");
+  return `${RULES}\n\nSPEC ACTUAL:\n${JSON.stringify(stripIds(S.spec))}\n\nCONVERSACIÓN HASTA AHORA:\n${convo}\n\nÚLTIMO MENSAJE DE LA PERSONA:\n${userText}`;
+}
+function stripIds(sp){ const c=clone(sp); c.modules=c.modules.map(({id,...r})=>r); delete c.blindspots; delete c.domain; return c; }
+const HEX=/^#[0-9a-f]{6}$/i;
+function sanitize(sp){
+  const base=emptySpec(), o=Object.assign(base, sp||{});
+  o.name=String(o.name||S.spec.name||"Mi plataforma").slice(0,60);
+  o.audiences=Array.isArray(o.audiences)?o.audiences.map(String).slice(0,8):[];
+  o.modules=(Array.isArray(o.modules)?o.modules:[]).slice(0,8).map(m=>mod(TYPES.includes(m.type)?m.type:"lista", String(m.label||"Sección").slice(0,40), String(m.desc||""), Array.isArray(m.items)?m.items.map(String).slice(0,8):[]));
+  const c=o.colors||{}; o.colors={primary:HEX.test(c.primary)?c.primary:S.spec.colors.primary, accent:HEX.test(c.accent)?c.accent:S.spec.colors.accent, surface:c.surface==="dark"?"dark":"light"};
+  o.nav=["top","side","bottom"].includes(o.nav)?o.nav:"top";
+  o.facts=o.facts&&typeof o.facts==="object"?o.facts:{};
+  if(o.facts.hours && !(Array.isArray(o.facts.hours)&&o.facts.hours.length===2)) delete o.facts.hours;
+  o.stats=Array.isArray(o.stats)?o.stats.slice(0,4).map(s=>({label:String(s.label||""),value:String(s.value??"")})):[];
+  o.domain=S.spec.domain||detectDomain(o.kind||o.name);
+  o.blindspots=[];
+  return o;
+}
+async function aiTurn(userText){
+  const ctl=new AbortController(); busy=ctl; renderLog();
+  try{
+    const r = await sampleFn.json(aiPrompt(userText), {modelTier:"quick", cache:false, signal:ctl.signal});
+    if(!r || typeof r!=="object" || !r.spec) throw {code:"invalid_json"};
+    const prevNav=S.spec.nav;
+    S.spec = sanitize(r.spec);
+    if(S.spec.nav==="bottom" && prevNav!=="bottom") setDevice("mob");
+    if(!S.spec.modules.some(m=>m.id===S.page)) S.page="home";
+    const q = r.question && Array.isArray(r.question.options) && r.question.options.length ? {
+      text:String(r.question.text||""), hint:String(r.question.hint||""), multi:!!r.question.multi,
+      options:r.question.options.slice(0,8).map(o=>({label:String(o.label||""), selected:!!o.selected, swatch:Array.isArray(o.swatch)?o.swatch.filter(x=>HEX.test(x)).slice(0,2):null}))} : null;
+    const changes = Array.isArray(r.changes)?r.changes.map(String).slice(0,6):[];
+    const blind = !q && Array.isArray(r.blindspots) ? r.blindspots.map(String).slice(0,6) : [];
+    S.map.push({said:userText, built:changes});
+    S.log.push({who:"ai", text:String(r.say||""), changes, question:q, blind});
+    S.question=q; S.spec.blindspots=blind;
+  }catch(e){
+    if(e && e.code==="cancelled"){ S.log.push({who:"ai", text:"Detenido. Puedes responder de nuevo o cambiar a modo guiado.", question:S.question}); }
+    else {
+      const hide = ["not_granted","sampling_disabled","not_declared","capability_disabled","capability_removed"].includes(e&&e.code);
+      if(hide){ aiReady=false; }
+      S.engine="local"; updateBadge();
+      const msg = hide ? "La IA no está disponible en esta vista, así que sigo en modo guiado." : (e&&e.code==="rate_limited" ? "La IA está ocupada por ahora. Sigo en modo guiado; puedes volver a la IA en unos minutos." : "No pude leer la respuesta de la IA. Sigo en modo guiado.");
+      if(!S.spec.kind){ localFlowAfterIdea(userText, msg); } else { const q=localNext(); S.question=q; S.log.push({who:"ai", text:msg, question:q, blind: q?[]:D().blind}); }
+    }
+  }finally{ busy=null; save(); renderAll(); }
+}
+
+/* ---------- Conversation flow ---------- */
+function localFlowAfterIdea(text, prefix){
+  const ch=localStart(text); deriveStats();
+  S.map.push({said:text, built:ch});
+  const q=localNext(); S.question=q;
+  S.log.push({who:"ai", text:(prefix?prefix+" ":"")+`Perfecto, armé un primer borrador para ${S.spec.name}. Míralo a la derecha; lo vamos afinando con cada respuesta.`, changes:ch, question:q});
+}
+function submit(sel, free){
+  if(busy) return;
+  free=(free||"").trim();
+  const q=S.question;
+  const labels = q ? sel.map(v => (q.options.find(o=>(o.value??o.label)==v)||{}).label || v) : [];
+  let said = [labels.join(", "), free].filter(Boolean).join(". ");
+  if(q && q.multi){ const rej=q.options.filter(o=>!sel.includes(o.value??o.label)).map(o=>o.label); if(rej.length && S.engine==="ai") said += (said?". ":"") + "No me interesa: " + rej.join(", "); }
+  if(!said) return;
+  snapshot();
+  S.log.push({who:"me", text: said});
+  if(S.engine==="ai" && aiReady){ save(); renderAll(); aiTurn(said); return; }
+  if(!S.spec.kind){ localFlowAfterIdea(free || labels[0]); }
+  else if(q && !(free && !sel.length && applyCommand(free).length && !["colors","name","units","hours","surface"].includes(q.key))){
+    const step=FLOW[S.step]; let ch=step.apply(sel.map(String), free); deriveStats();
+    S.map.push({said, built:ch}); S.step++;
+    const nq=localNext(); S.question=nq;
+    S.log.push({who:"ai", text: nq ? pick(["Listo.","Hecho.","Anotado.","Perfecto."]) : `Listo, ${S.spec.name} tiene su primera versión. Recorre las secciones en la vista previa; puedes seguir pidiendo cambios aquí (ej. “menú lateral”, “agrega galería”, “colores verde y blanco”).`, changes:ch, question:nq, blind: nq?[]:D().blind});
+  } else {
+    const ch=applyCommand(free,true); deriveStats();
+    S.map.push({said, built:ch.length?ch:["Sin cambios"]});
+    S.log.push({who:"ai", text: ch.length ? "Cambio aplicado." + (q ? " Seguimos con la pregunta pendiente." : "") : "No entendí ese cambio. Prueba con algo como “menú lateral”, “colores azul y amarillo” o “agrega tienda”.", changes:ch, question:q});
+  }
+  if(!S.spec.modules.some(m=>m.id===S.page)) S.page="home";
+  save(); renderAll();
+}
+const pick = a => a[Math.floor(Math.random()*a.length)];
+
+/* ---------- Rendering: chat ---------- */
+function renderLog(){
+  const el=$("#log"); let h="";
+  if(!S.log.length){
+    h+=`<div class="msg ai"><div class="who">Andamio</div><p>Hola. Cuéntame qué plataforma quieres crear y para quién. Yo te voy proponiendo botones, secciones, colores y números, y tú aceptas o rechazas.</p>
+      <div class="q"><h3>¿Qué plataforma quieres crear?</h3><p class="hint">Escríbelo con tus palabras o parte con un ejemplo.</p>
+      <div class="opts">${["Quiero una plataforma para mi club de tenis Providencia","Una app para reservar mesas en mi restaurante","Un portal para apoderados de mi colegio","Una plataforma para mi consulta de kinesiología"].map(x=>`<button type="button" class="opt" data-idea="${esc(x)}">${esc(x)}</button>`).join("")}</div></div></div>`;
+  }
+  S.log.forEach((m,i)=>{
+    if(m.who==="me"){ h+=`<div class="msg me">${esc(m.text)}</div>`; return; }
+    const last = i===S.log.length-1;
+    h+=`<div class="msg ai"><div class="who">Andamio</div>${m.text?`<p>${esc(m.text)}</p>`:""}`;
+    if(m.changes&&m.changes.length) h+=`<div class="changes">${m.changes.map(c=>`<span class="chg">${esc(c)}</span>`).join("")}</div>`;
+    if(last && m.question && !busy){
+      const q=m.question;
+      h+=`<div class="q" data-multi="${q.multi?1:0}"><h3>${esc(q.text)}</h3>${q.hint?`<p class="hint">${esc(q.hint)}</p>`:""}
+        <div class="opts">${q.options.map(o=>`<button type="button" class="opt" data-v="${esc(o.value??o.label)}" aria-pressed="${q.multi&&o.selected?"true":"false"}">${o.swatch&&o.swatch.length?`<span class="sw">${o.swatch.map(c=>`<i style="background:${c}"></i>`).join("")}</span>`:""}${esc(o.label)}</button>`).join("")}</div>
+        <div class="qrow">${q.multi?`<button type="button" class="go" id="qGo">Confirmar selección</button>`:""}<button type="button" class="skip" id="qSkip">Saltar esta pregunta</button></div></div>`;
+    }
+    if(m.blind&&m.blind.length) h+=`<div class="blind"><b>Podrías estar olvidando</b><ul>${m.blind.map(b=>`<li>${esc(b)}</li>`).join("")}</ul></div>`;
+    h+=`</div>`;
+  });
+  if(busy) h+=`<div class="msg ai"><div class="who">Andamio</div><div class="think"><span class="dots"><i></i><i></i><i></i></span>Pensando la siguiente propuesta… <button type="button" class="skip" id="stopBtn">Detener</button></div></div>`;
+  el.innerHTML=h; el.scrollTop=el.scrollHeight;
+  const inp=$("#input");
+  inp.placeholder = !S.spec.kind ? "Describe tu plataforma…" : S.question ? (S.question.multi ? "Agrega otra opción o pide un cambio…" : "Escribe otra respuesta o pide un cambio…") : "Pide un cambio (ej. menú lateral)…";
+}
+$("#log").addEventListener("click", e=>{
+  const idea=e.target.closest("[data-idea]"); if(idea){ submit([], idea.dataset.idea); return; }
+  if(e.target.closest("#stopBtn")){ busy&&busy.abort(); return; }
+  const opt=e.target.closest(".opt[data-v]");
+  if(opt){ const box=opt.closest(".q");
+    if(box.dataset.multi==="1"){ opt.setAttribute("aria-pressed", opt.getAttribute("aria-pressed")==="true"?"false":"true"); }
+    else submit([opt.dataset.v], "");
+    return; }
+  if(e.target.closest("#qGo")){ const box=e.target.closest(".q"); const sel=[...box.querySelectorAll('.opt[aria-pressed="true"]')].map(b=>b.dataset.v); submit(sel, $("#input").value); $("#input").value=""; return; }
+  if(e.target.closest("#qSkip")){
+    if(busy) return; snapshot();
+    S.log.push({who:"me", text:"Saltar"});
+    if(S.engine==="ai"&&aiReady){ renderAll(); aiTurn("Prefiero saltar esta pregunta. Sigue con la siguiente."); return; }
+    S.step++; const nq=localNext(); S.question=nq; S.log.push({who:"ai", text:nq?"Sin problema.":"Listo, primera versión armada.", question:nq, blind:nq?[]:D().blind}); save(); renderAll();
+  }
+});
+$("#composer").addEventListener("submit", e=>{
+  e.preventDefault(); const v=$("#input").value.trim(); if(!v) return;
+  const box=document.querySelector(".q[data-multi='1']");
+  const sel = box ? [...box.querySelectorAll('.opt[aria-pressed="true"]')].map(b=>b.dataset.v) : [];
+  $("#input").value=""; submit(sel, v);
+});
+$("#input").addEventListener("keydown", e=>{ if(e.key==="Enter"&&!e.shiftKey){ e.preventDefault(); $("#composer").requestSubmit(); }});
+
+/* ---------- Rendering: preview of the generated platform ---------- */
+function lum(hex){ const n=parseInt(hex.slice(1),16); const c=[n>>16,(n>>8)&255,n&255].map(v=>{v/=255;return v<=.03928?v/12.92:Math.pow((v+.055)/1.055,2.4)}); return .2126*c[0]+.7152*c[1]+.0722*c[2]; }
+const on = hex => lum(hex) > .42 ? "#13171C" : "#FFFFFF";
+let device="desk", view="prev";
+function setDevice(d){ device=d; $("#devDesk").setAttribute("aria-pressed", d==="desk"); $("#devMob").setAttribute("aria-pressed", d==="mob"); }
+
+function renderStage(){
+  const c=$("#canvas"), sp=S.spec;
+  $("#devSeg").hidden = view!=="prev";
+  if(view==="plan"){ c.innerHTML=planHTML(); $("#stageNote").textContent=""; return; }
+  if(!sp.kind){
+    c.innerHTML=`<div class="device ${device}"><div class="chrome"><i></i><i></i><i></i><span class="url">tuplataforma.andamio.app</span></div><div class="ghost"><div><h2>Aquí aparece tu plataforma</h2><p>Cada respuesta se traduce en algo visible: secciones del menú, botones, colores, números de tu negocio y la orientación de la navegación.</p></div></div></div>`;
+    $("#stageNote").textContent=""; return;
+  }
+  const dark=sp.colors.surface==="dark", p=sp.colors.primary, a=sp.colors.accent;
+  const v={ "--p":p, "--a":a, "--afg":on(a), "--pfgon":on(p),
+    "--pbg":dark?"#0F1317":"#F6F7F5", "--pfg":dark?"#ECEFF3":"#15191E", "--pcard":dark?"#192028":"#FFFFFF",
+    "--pline":dark?"#2A323C":"#E1E5E9", "--pmuted":dark?"#9AA5B1":"#5E6A77",
+    "--phead":dark?"#141A21":p, "--pheadfg":dark?"#ECEFF3":on(p) };
+  const style=Object.entries(v).map(([k,x])=>`${k}:${x}`).join(";");
+  const navItems=[{id:"home",type:"home",label:"Inicio"},...sp.modules];
+  const navBtns = (withIcons) => navItems.map(n=>`<button type="button" data-page="${n.id}" ${S.page===n.id?'aria-current="page"':""}>${withIcons?icon(n.type):""}<span>${esc(n.label)}</span></button>`).join("");
+  const logo=`<div class="pv-logo"><i>${esc(initials(sp.name))}</i><span>${esc(sp.name)}</span></div>`;
+  const body=`<div class="pv-body">${pageHTML()}</div>`;
+  let inner;
+  const nav = (sp.nav==="top" && device==="mob") ? "bottom" : sp.nav;
+  if(nav==="side") inner=`<div class="pv side" style="${style}"><aside class="pv-side">${logo}<nav class="pv-nav">${navBtns(true)}</nav></aside>${body}</div>`;
+  else if(nav==="bottom") inner=`<div class="pv" style="${style}"><div class="pv-head">${logo}</div>${body}<nav class="pv-tabbar">${navItems.slice(0,5).map(n=>`<button type="button" data-page="${n.id}" ${S.page===n.id?'aria-current="page"':""}>${icon(n.type)}<span>${esc(n.label.split(" ")[0])}</span></button>`).join("")}</nav></div>`;
+  else inner=`<div class="pv" style="${style}"><div class="pv-head">${logo}<nav class="pv-nav">${navBtns(false)}</nav></div>${body}</div>`;
+  const slug=(sp.name||"plataforma").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
+  c.innerHTML=`<div class="device ${device}"><div class="chrome"><i></i><i></i><i></i><span class="url">${esc(slug)}.andamio.app${S.page!=="home"?"/"+esc((sp.modules.find(m=>m.id===S.page)||{}).type||""):""}</span></div>${inner}</div>`;
+  $("#stageNote").textContent = `${sp.modules.length} secciones · menú ${({top:"superior",side:"lateral",bottom:"inferior"})[sp.nav]}${sp.nav==="top"&&device==="mob"?" (en móvil pasa abajo)":""}`;
+}
+$("#canvas").addEventListener("click", e=>{
+  const pg=e.target.closest("[data-page]"); if(pg){ S.page=pg.dataset.page; save(); renderStage(); return; }
+  const sl=e.target.closest(".pv-slot.free,.pv-slot.mine"); if(sl){ const k=sl.dataset.k; S.booked = S.booked.includes(k) ? S.booked.filter(x=>x!==k) : [...S.booked,k]; save(); renderStage(); return; }
+  if(e.target.closest("#copyJson")){ const t=JSON.stringify(stripIds(S.spec),null,2); const b=e.target.closest("#copyJson");
+    navigator.clipboard.writeText(t).then(()=>{b.textContent="Copiado";},()=>{ const r=document.createRange(); r.selectNodeContents($("#jsonPre")); const s=getSelection(); s.removeAllRanges(); s.addRange(r); b.textContent="Texto seleccionado: cópialo"; }); }
+});
+
+function pageHTML(){
+  const sp=S.spec;
+  if(S.page==="home"){
+    const first=sp.modules[0];
+    return `<section class="pv-hero"><h1>${esc(sp.name)}</h1><p>${esc(sp.tagline)}</p>${first?`<button type="button" class="pv-cta" data-page="${first.id}">${esc(sp.cta||first.label)}</button>`:""}</section>
+      ${sp.stats.length?`<div class="pv-stats">${sp.stats.map(s=>`<div class="pv-stat"><b>${esc(s.value)}</b><span>${esc(s.label)}</span></div>`).join("")}</div>`:""}
+      <div><h2 class="pv-h2">¿Qué quieres hacer?</h2></div>
+      <div class="pv-grid">${sp.modules.map(m=>`<button type="button" class="pv-card" data-page="${m.id}">${icon(m.type)}<b>${esc(m.label)}</b><span>${esc(m.desc)}</span></button>`).join("")}</div>
+      ${sp.audiences.length?`<div class="pv-row"><span class="pv-ex">Accesos: ${sp.audiences.map(esc).join(" · ")}</span></div>`:""}`;
+  }
+  const m=sp.modules.find(x=>x.id===S.page); if(!m) return "";
+  const head=`<div><h2 class="pv-h2">${esc(m.label)}</h2></div><p class="pv-sub">${esc(m.desc)}</p>`;
+  return head + (R[m.type]||R.lista)(m) + `<span class="pv-ex">Contenido de ejemplo: se reemplaza por tus datos reales.</span>`;
+}
+const isClub = () => S.spec.domain==="club";
+const listCards = (items) => `<div class="pv-grid">${items.map(it=>`<div class="pv-card"><b>${esc(it[0])}</b>${it[1]?`<span>${esc(it[1])}</span>`:""}${it[2]?`<span class="pv-tag">${esc(it[2])}</span>`:""}</div>`).join("")}</div>`;
+const fromItems = (m, dflt) => m.items && m.items.length ? m.items.map(x=>[x]) : dflt;
+const R = {
+  reservas(m){
+    const f=S.spec.facts, n=Math.max(1,Math.min(+f.units||4,12)), h=f.hours||(isClub()?[8,22]:[9,19]), unit=(DOMAINS[S.spec.domain]||DOMAINS.generic).unit;
+    const days=["Hoy","Mañana","Sáb","Dom"];
+    let t=`<div class="pv-row"><div class="pv-nav" style="margin:0">${days.map((d,i)=>`<button type="button" class="pv-slot ${i?"free":"mine"}" style="min-width:0" tabindex="-1">${d}</button>`).join("")}</div><span class="pv-ex">Toca un bloque libre para reservar</span></div>`;
+    t+=`<div class="pv-tblwrap"><table class="pv-tbl"><thead><tr><th>Hora</th>${Array.from({length:n},(_,i)=>`<th>${unit} ${i+1}</th>`).join("")}</tr></thead><tbody>`;
+    for(let hr=h[0]; hr<h[1]; hr++){
+      t+=`<tr><td>${pad(hr%24)}:00</td>`;
+      for(let c=0;c<n;c++){ const k=hr+"-"+c, busy=((hr*31+c*17)%7)<2, mine=S.booked.includes(k);
+        t+=`<td><button type="button" class="pv-slot ${mine?"mine":busy?"busy":"free"}" data-k="${k}" ${busy&&!mine?"disabled":""}>${mine?"Tu reserva":busy?"Ocupada":"Libre"}</button></td>`; }
+      t+=`</tr>`;
+    }
+    return t+`</tbody></table></div>`;
+  },
+  ranking(m){ const names=m.items&&m.items.length?m.items:["M. Rojas","C. Fuentes","J. Pérez","V. Soto","A. Muñoz","F. Vidal","T. Araya"];
+    return `<div class="pv-tblwrap"><table class="pv-tbl"><thead><tr><th>#</th><th>Jugador</th><th>Puntos</th><th>Últimos</th><th></th></tr></thead><tbody>${names.map((n,i)=>`<tr><td>${i+1}</td><td>${esc(n)}</td><td>${1480-i*85}</td><td>${["G G P G","G P G G","P G G P","G G G P","P P G G","G P P G","P G P P"][i%7]}</td><td><button type="button" class="pv-slot free" tabindex="-1">Desafiar</button></td></tr>`).join("")}</tbody></table></div>`; },
+  torneos(m){ return listCards(fromItems(m,[["Torneo de Primavera","15 al 23 de noviembre · Singles A, B y C","Inscripciones abiertas"],["Interclubes Oriente","6 de diciembre · Por equipos","Cupos limitados"],["Copa Dobles Mixtos","13 y 14 de diciembre","Próximamente"]])); },
+  clases(m){ return listCards(fromItems(m, isClub()?[["Mini tenis (5 a 8 años)","Lun y Mié 17:00 · Prof. Daniela","6 cupos"],["Juveniles competitivos","Mar y Jue 18:00 · Prof. Andrés","2 cupos"],["Adultos intermedio","Sáb 10:00 · Prof. Camila","4 cupos"],["Clase particular","A convenir · 60 min","Reservar"]]:[["Curso 1","Lunes y miércoles","Abierto"],["Curso 2","Martes y jueves","Abierto"],["Curso 3","Sábado","Últimos cupos"]])); },
+  pagos(){ const amt=isClub()?48000:35000;
+    return `<div class="pv-card"><div class="pv-row"><div><b>Cuota de noviembre</b><br><span>Vence el 10/11 · ${clp(amt)}</span></div><button type="button" class="pv-btn" tabindex="-1">Pagar ${clp(amt)}</button></div></div>`+
+      listCards([["Octubre","Pagado el 05/10 · "+clp(amt),"Al día"],["Septiembre","Pagado el 03/09 · "+clp(amt),"Al día"],[isClub()?"Iluminación nocturna":"Cargo adicional","4 horas · "+clp(isClub()?12000:5000),"Pagado"]]); },
+  noticias(m){ return listCards(fromItems(m, isClub()?[["Nuevo horario de iluminación","Las canchas 1 a 4 quedan iluminadas hasta las 23:00.","Hace 2 días"],["Resultados Torneo de Otoño","Revisa los campeones de cada categoría.","Hace 1 semana"],["Mantención cancha 3","Cerrada el lunes por recarga de arcilla.","Aviso"]]:[["Bienvenidos a la nueva plataforma","Desde ahora todo se gestiona aquí.","Hoy"],["Cambio de horario","Atención extendida en diciembre.","Aviso"],["Próximo evento","Reserva la fecha.","Pronto"]])); },
+  tienda(m){ const it = m.items&&m.items.length ? m.items.map((x,i)=>[x,clp(9990+i*5000),"Agregar"]) : (isClub()?[["Tubo de pelotas","",clp(6990)],["Encordado","Entrega en 24 h",clp(15000)],["Grip overgrip x3","",clp(5990)],["Raqueta de arriendo","Por hora",clp(3000)]]:S.spec.domain==="resto"?[["Plato del día","Con postre",clp(8900)],["Pastel de choclo","",clp(10900)],["Ceviche","",clp(9500)],["Pisco sour","",clp(4900)]]:[["Producto A","",clp(19990)],["Producto B","",clp(29990)],["Servicio C","Por sesión",clp(25000)]]);
+    return listCards(it); },
+  socios(){ return `<div class="pv-card" style="max-width:420px"><div class="pv-row"><b>Socio de ejemplo</b><span class="pv-tag">Al día</span></div><span>N° ${isClub()?"socio":"cuenta"} 01482 · Desde 2019</span><span>Grupo familiar: 3 personas</span><span>Correo y teléfono verificados</span></div>`; },
+  galeria(){ return `<div class="pv-gal">${Array.from({length:6},(_,i)=>`<div style="background:linear-gradient(${30+i*40}deg,var(--p),var(--a))"></div>`).join("")}</div>`; },
+  agenda(m){ return listCards(fromItems(m,[["Lunes 10","Reunión general · 19:00","Agenda"],["Miércoles 12","Actividad abierta · 18:30","Inscripción"],["Sábado 15","Jornada especial · 10:00","Destacado"]])); },
+  contacto(){ return `<div class="pv-grid"><div class="pv-card"><b>Dirección</b><span>Providencia, Santiago (por definir)</span><b>Horario</b><span>Lunes a domingo</span></div><div class="pv-card"><b>Escríbenos</b><input class="pv-input" placeholder="Tu correo" tabindex="-1"><textarea class="pv-input" rows="3" placeholder="Mensaje" tabindex="-1"></textarea><button type="button" class="pv-btn" tabindex="-1">Enviar</button></div></div>`; },
+  dashboard(){ return `<div class="pv-stats">${[["Reservas hoy","18"],["Usuarios activos","342"],["Pagos pendientes","27"],["Mensajes","6"]].map(s=>`<div class="pv-stat"><b>${s[1]}</b><span>${s[0]}</span></div>`).join("")}</div>`; },
+  lista(m){ return listCards(m.items&&m.items.length?m.items.map(x=>[x]):[["Primer elemento","Aquí va el contenido de esta sección"],["Segundo elemento",""],["Tercer elemento",""]]); }
+};
+
+function planHTML(){
+  const sp=S.spec;
+  return `<div class="plan"><div><h2>Plano de ${esc(sp.name||"tu plataforma")}</h2><p class="lead">Cada cosa que dijiste y en qué se convirtió dentro de la plataforma. Esta especificación es la que después se construye de verdad.</p></div>
+    ${S.map.length?`<div style="overflow-x:auto"><table class="maptbl"><thead><tr><th>Lo que dijiste</th><th>Lo que se construyó</th></tr></thead><tbody>${S.map.map(r=>`<tr><td>“${esc(r.said)}”</td><td>${(r.built||[]).map(b=>`<span class="chg">${esc(b)}</span>`).join(" ")}</td></tr>`).join("")}</tbody></table></div>`:`<p class="lead">Todavía no hay respuestas. Empieza la conversación a la izquierda.</p>`}
+    <div class="pv-row" style="gap:10px"><h2 style="font-size:18px">Especificación (JSON)</h2><button type="button" class="tbtn" id="copyJson">Copiar JSON</button></div>
+    <pre class="json" id="jsonPre">${esc(JSON.stringify(stripIds(sp),null,2))}</pre></div>`;
+}
+
+/* ---------- Header controls ---------- */
+function updateBadge(){
+  const b=$("#engineBadge"), on=S.engine==="ai"&&aiReady;
+  b.classList.toggle("on", on);
+  b.querySelector("span").textContent = on ? "IA conectada (Claude)" : aiReady ? "Modo guiado · toca para usar IA" : "Modo guiado";
+  b.disabled = !aiReady;
+}
+$("#engineBadge").addEventListener("click", ()=>{ if(!aiReady) return; S.engine = S.engine==="ai" ? "local" : "ai"; aiWanted = S.engine==="ai";
+  if(S.engine==="local" && S.spec.kind && !S.question){ S.step=Math.min(S.step,FLOW.length); }
+  save(); updateBadge(); });
+$("#undoBtn").addEventListener("click", ()=>{ if(busy||!undo.length) return; S=Object.assign(fresh(), JSON.parse(undo.pop())); $("#undoBtn").disabled=!undo.length; save(); renderAll(); });
+$("#resetBtn").addEventListener("click", ()=>{ if(busy) busy.abort(); const eng=S.engine; S=fresh(); S.engine=eng; undo.length=0; $("#undoBtn").disabled=true; save(); renderAll(); });
+$("#tabPrev").addEventListener("click", ()=>{ view="prev"; $("#tabPrev").setAttribute("aria-pressed","true"); $("#tabPlan").setAttribute("aria-pressed","false"); renderStage(); });
+$("#tabPlan").addEventListener("click", ()=>{ view="plan"; $("#tabPlan").setAttribute("aria-pressed","true"); $("#tabPrev").setAttribute("aria-pressed","false"); renderStage(); });
+$("#devDesk").addEventListener("click", ()=>{ setDevice("desk"); renderStage(); });
+$("#devMob").addEventListener("click", ()=>{ setDevice("mob"); renderStage(); });
+
+function renderAll(){ renderLog(); renderStage(); updateBadge(); }
+if(S.spec.nav==="bottom") setDevice("mob");
+renderAll();
+
+/* Light up the AI engine if this view can ask Claude */
+if(window.claude && typeof window.claude.use==="function"){
+  window.claude.use("sample").then(fn=>{ sampleFn=fn; aiReady=!!fn; if(aiReady && aiWanted && !S.log.length) S.engine="ai"; else if(aiReady && S.engine!=="ai") S.engine="local"; updateBadge(); }).catch(()=>{ aiReady=false; updateBadge(); });
+} else { updateBadge(); }
+})();
+</script>
