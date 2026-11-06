@@ -145,6 +145,49 @@ button.pv-card:hover{border-color:var(--p)}
 .pv-gal{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .pv-gal div{aspect-ratio:4/3;border-radius:10px;max-width:100%}
 .pv-input{border:1px solid var(--pline);background:var(--pbg);color:var(--pfg);border-radius:8px;padding:9px 11px;font:inherit;width:100%}
+/* ---- Business panel: unified inbox & channels ---- */
+.pv .chb,.chb{color:#fff}
+.chb{display:inline-grid;place-items:center;min-width:22px;height:22px;padding:0 5px;border-radius:6px;color:#fff;font-size:10px;font-weight:700;font-family:var(--f-mono);flex:none;letter-spacing:0}
+.pv-g{display:flex;flex-direction:column;gap:2px}
+.pv-gl{font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;opacity:.6;padding:10px 11px 4px}
+.pv-cnt{margin-left:auto;font-style:normal;font-size:11px;font-weight:700;background:var(--a);color:var(--afg);border-radius:999px;padding:1px 7px}
+.pv.side.compact{flex-direction:column}
+.pv.side.compact .pv-side{width:auto;padding:10px 12px;gap:8px}
+.pv.side.compact .pv-nav{flex-direction:row;overflow-x:auto}
+.pv.compact .pv-g{flex-direction:row}
+.pv-topbar{border-bottom:1px solid var(--pline);padding-bottom:14px}
+.pv-2{display:grid;grid-template-columns:1.25fr 1fr;gap:12px}
+.pv.compact .pv-2{grid-template-columns:1fr}
+.pv-bars{display:flex;flex-direction:column;gap:9px}
+.pv-bar{display:grid;grid-template-columns:minmax(0,150px) 1fr 36px;gap:10px;align-items:center;font-size:13px}
+.pv-bl{display:flex;gap:8px;align-items:center;min-width:0;overflow:hidden;white-space:nowrap}
+.pv-bt{height:10px;background:color-mix(in srgb,var(--pfg) 6%,transparent);border-radius:4px;overflow:hidden}
+.pv-bt i{display:block;height:100%;background:var(--p);border-radius:0 4px 4px 0}
+.pv-bar b{text-align:right;font-variant-numeric:tabular-nums}
+.pv-chips{display:flex;gap:6px;flex-wrap:wrap}
+.pv-chip{border:1px solid var(--pline);background:var(--pcard);color:var(--pfg);border-radius:999px;padding:4px 10px;font-size:12.5px;display:inline-flex;gap:6px;align-items:center}
+.pv-chip[aria-pressed="true"]{border-color:var(--p);background:color-mix(in srgb,var(--p) 14%,transparent);font-weight:600}
+.pv-inbox{display:grid;grid-template-columns:minmax(200px,290px) 1fr;border:1px solid var(--pline);border-radius:12px;background:var(--pcard);overflow:hidden;min-height:400px}
+.pv.compact .pv-inbox{grid-template-columns:1fr}
+.pv-list{border-right:1px solid var(--pline);display:flex;flex-direction:column;overflow:auto;max-height:540px;min-width:0}
+.pv.compact .pv-list{max-height:230px;border-right:0;border-bottom:1px solid var(--pline)}
+.pv-conv{border:0;border-bottom:1px solid var(--pline);background:transparent;color:inherit;text-align:left;padding:10px 12px;display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:3px 10px;align-items:center}
+.pv-conv[aria-current="true"]{background:color-mix(in srgb,var(--p) 11%,transparent)}
+.pv-conv b{font-size:13.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pv-conv time{font-size:11.5px;color:var(--pmuted)}
+.pv-conv .pv-prev{grid-column:2/4;font-size:12.5px;color:var(--pmuted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pv-conv.unread b{font-weight:800}
+.pv-conv.unread time{color:var(--pfg);font-weight:700}
+.pv-thread{display:flex;flex-direction:column;gap:10px;padding:14px;min-width:0}
+.pv-bub{max-width:82%;padding:9px 12px;border-radius:12px;background:color-mix(in srgb,var(--pfg) 7%,transparent);font-size:13.5px}
+.pv-bub.me{align-self:flex-end;background:var(--p);color:var(--pfgon)}
+.pv-bub small{display:block;opacity:.75;font-size:11px;margin-top:3px}
+.pv-reply{margin-top:auto;border-top:1px solid var(--pline);padding-top:10px;display:flex;flex-direction:column;gap:8px}
+.pv-reply label{font-size:12px;color:var(--pmuted)}
+.pv-btn.alt{background:transparent;color:var(--pfg);border:1px solid var(--pline)}
+.pv-faq{display:grid;grid-template-columns:auto 1fr auto;gap:6px 14px;align-items:center}
+.pv-faq .n{font-family:var(--f-display);font-size:22px;font-variant-numeric:tabular-nums;min-width:2ch}
+.pv-faq .a{grid-column:2/4;font-size:13px;color:var(--pmuted)}
 .ghost{min-height:560px;display:grid;place-items:center;padding:30px;text-align:center;color:var(--muted);background:
   repeating-linear-gradient(0deg,transparent 0 23px,color-mix(in srgb,var(--line) 70%,transparent) 23px 24px),
   repeating-linear-gradient(90deg,transparent 0 23px,color-mix(in srgb,var(--line) 70%,transparent) 23px 24px),var(--paper)}
@@ -194,6 +237,10 @@ button.pv-card:hover{border-color:var(--p)}
           <button type="button" id="tabPrev" aria-pressed="true">Vista previa</button>
           <button type="button" id="tabPlan" aria-pressed="false">Plano</button>
         </div>
+        <div class="seg" role="group" aria-label="Cara de la plataforma" id="faceSeg">
+          <button type="button" id="faceCli" aria-pressed="true">Sitio para clientes</button>
+          <button type="button" id="facePan" aria-pressed="false">Panel del negocio</button>
+        </div>
         <div class="seg" role="group" aria-label="Dispositivo" id="devSeg">
           <button type="button" id="devDesk" aria-pressed="true">Escritorio</button>
           <button type="button" id="devMob" aria-pressed="false">Móvil</button>
@@ -228,6 +275,9 @@ const ICON = {
   agenda:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4M7 14h3M7 17h6"/>',
   contacto:'<path d="M12 21s-7-6.2-7-11a7 7 0 0114 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/>',
   dashboard:'<rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/>',
+  inbox:'<path d="M3 13l3-8h12l3 8v6a1 1 0 01-1 1H4a1 1 0 01-1-1zM3 13h5l1 3h6l1-3h5"/>',
+  faq:'<circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 114 2c-1 .6-1.5 1.2-1.5 2.5M12 17h.01"/>',
+  plug:'<path d="M9 3v5M15 3v5M6 8h12v3a6 6 0 01-12 0zM12 17v4"/>',
   lista:'<path d="M9 6h12M9 12h12M9 18h12M4 6h.01M4 12h.01M4 18h.01"/>'
 };
 const icon = t => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON[t] || ICON.lista}</svg>`;
@@ -370,6 +420,68 @@ const DOMAINS = {
 };
 const COLOR_WORDS = {azul:"#1D4ED8",marino:"#1D3F72",celeste:"#3B9BD6",verde:"#1E6B43",lima:"#B7D63C",rojo:"#B42318",burdeo:"#7A1E33",naranja:"#E07020",arcilla:"#B5502A",amarillo:"#E5B800",dorado:"#C9A13B",negro:"#16181C",gris:"#5B6470",morado:"#6D28D9",violeta:"#7C3AED",rosado:"#D9467A",turquesa:"#14A3A0",cafe:"#6B4226","café":"#6B4226",blanco:"#FFFFFF"};
 
+/* ---------- Digital channels the business panel brings into one place ---------- */
+const CH = {
+  whatsapp:{label:"WhatsApp",c:"#1C9E50",s:"WA",what:"Chats de WhatsApp Business, plantillas y catálogo",send:"Enviar por WhatsApp"},
+  instagram:{label:"Instagram",c:"#C92E68",s:"IG",what:"Mensajes directos, comentarios y menciones",send:"Responder en Instagram"},
+  facebook:{label:"Facebook",c:"#1A6FE0",s:"FB",what:"Messenger y comentarios de la página",send:"Responder en Messenger"},
+  correo:{label:"Correo",c:"#5B6678",s:"@",what:"Bandeja de Gmail u Outlook del negocio",send:"Enviar correo"},
+  llamadas:{label:"Llamadas",c:"#0B8580",s:"Tel",what:"Llamadas atendidas y perdidas, con resumen automático",send:"Devolver por WhatsApp"},
+  google:{label:"Reseñas Google",c:"#C98A00",s:"G",what:"Reseñas y preguntas de tu ficha en Google Maps",send:"Publicar respuesta"},
+  tiktok:{label:"TikTok",c:"#2E2E33",s:"TT",what:"Comentarios y mensajes directos",send:"Responder en TikTok"},
+  webchat:{label:"Chat web",c:"#6E3AD6",s:"Web",what:"Burbuja de chat en tu sitio para clientes",send:"Responder en el chat"},
+  delivery:{label:"Delivery",c:"#D9540B",s:"Del",what:"Pedidos y reclamos de Rappi, Uber Eats o PedidosYa",send:"Responder al cliente"}
+};
+const CH_RX = {whatsapp:/whats|wsp|wasap/i, instagram:/insta/i, facebook:/facebook|\bfb\b|messenger/i, correo:/correo|mail|gmail|outlook/i, llamadas:/llamad|tel[eé]fono/i, google:/google|rese[ñn]a/i, tiktok:/tik ?tok/i, webchat:/chat web|chat del sitio/i, delivery:/delivery|rappi|uber|pedidosya/i};
+const CH_BY_DOMAIN = {club:["whatsapp","instagram","correo","llamadas","google","facebook","webchat","tiktok"], resto:["whatsapp","instagram","llamadas","google","correo","delivery","facebook","tiktok"], edu:["whatsapp","correo","facebook","instagram","llamadas","webchat"], generic:["whatsapp","instagram","correo","llamadas","google","facebook","webchat","tiktok"]};
+const CH_PRE = {club:["whatsapp","instagram","correo","google"], resto:["whatsapp","instagram","llamadas","google","delivery"], edu:["whatsapp","correo"], generic:["whatsapp","instagram","correo"]};
+const CH_TODAY = {whatsapp:46,instagram:23,facebook:7,correo:12,llamadas:9,google:4,tiktok:5,webchat:6,delivery:14};
+const CONVOS = {
+  club:[
+    {ch:"whatsapp",who:"Carolina Muñoz",time:"10:42",tag:"Reserva",unread:true,msgs:["Hola! ¿Hay cancha libre mañana a las 19:00? Somos 4 para dobles"],reply:"¡Hola Carolina! Mañana a las 19:00 está libre la cancha 3. ¿Te la reservo con tu número de socia?"},
+    {ch:"instagram",who:"@tomas.tenis",time:"10:15",tag:"Clases",unread:true,msgs:["¿Cuánto cuestan las clases para niños de 7 años?"],reply:"¡Hola Tomás! Mini tenis (5 a 8 años) es lunes y miércoles a las 17:00 y cuesta $40.000 al mes. ¿Agendamos una clase de prueba gratis?"},
+    {ch:"correo",who:"Rodrigo Silva",time:"09:58",tag:"Socios",unread:true,msgs:["Asunto: Incorporación como socio. Buenos días, quisiera saber los requisitos y la cuota de incorporación para mi familia (2 adultos y 2 hijos)."],reply:"Estimado Rodrigo: gracias por escribirnos. Te enviamos los requisitos y valores del plan familiar. ¿Te acomoda visitar el club esta semana?"},
+    {ch:"llamadas",who:"+56 9 8123 4567",time:"09:30",tag:"Llamada perdida",unread:true,msgs:["Llamada perdida, sin mensaje de voz."],reply:"Hola, vimos tu llamada al club. ¿En qué te podemos ayudar?"},
+    {ch:"google",who:"Andrea P. · 4 de 5",time:"Ayer",tag:"Reseña",unread:true,msgs:["Muy buenas canchas de arcilla y los profes muy buena onda, pero el estacionamiento se llena los fines de semana."],reply:"¡Gracias, Andrea! Estamos habilitando más estacionamientos para los sábados. Te esperamos de vuelta."},
+    {ch:"facebook",who:"Jorge Díaz",time:"Ayer",tag:"Torneos",unread:false,msgs:["¿Hasta cuándo hay inscripción para el torneo de primavera?"],reply:"¡Hola Jorge! Las inscripciones cierran el 12 de noviembre y se hacen en la sección Torneos."},
+    {ch:"webchat",who:"Visitante del sitio",time:"Ayer",tag:"Invitados",unread:false,msgs:["¿Pueden jugar personas que no son socias?"],reply:"Sí, pueden jugar invitadas por un socio, pagando el valor de invitado."},
+    {ch:"tiktok",who:"@pelotazo.cl",time:"Lun",tag:"Comentario",unread:false,msgs:["¿Dónde queda el club? Se ve increíble"],reply:"¡Gracias! Estamos en Providencia. Te dejamos la ubicación en la bio."}
+  ],
+  resto:[
+    {ch:"whatsapp",who:"Francisca R.",time:"12:05",tag:"Reserva",unread:true,msgs:["Hola, ¿tienen mesa para 4 hoy a las 21:00?"],reply:"¡Hola Francisca! Sí, tenemos mesa para 4 a las 21:00. ¿A nombre de quién la dejo?"},
+    {ch:"instagram",who:"@vale.come.rico",time:"11:48",tag:"Carta",unread:true,msgs:["¿La carta tiene opciones veganas?"],reply:"¡Hola! Sí, tenemos 4 platos veganos marcados en la carta, entre ellos el ceviche de champiñones."},
+    {ch:"delivery",who:"Pedido #4821",time:"11:30",tag:"Reclamo",unread:true,msgs:["El cliente indica que faltó una bebida en su pedido."],reply:"Hola, lamentamos el error. Te reembolsamos la bebida y te dejamos un 10% de descuento en tu próximo pedido."},
+    {ch:"llamadas",who:"+56 2 2345 6789",time:"11:02",tag:"Llamada atendida",unread:false,msgs:["Llamada de 3:12. Resumen automático: pidió 2 menús del día para retirar a las 13:30."],reply:"Hola, confirmamos tus 2 menús del día para retirar a las 13:30."},
+    {ch:"correo",who:"Eventos · Empresa Andes",time:"10:20",tag:"Eventos",unread:true,msgs:["Asunto: Cotización cena de fin de año. Somos 30 personas, viernes 12 de diciembre."],reply:"Hola, gracias por pensar en nosotros. Les enviamos dos menús para 30 personas y la disponibilidad del 12 de diciembre."},
+    {ch:"google",who:"Matías L. · 3 de 5",time:"Ayer",tag:"Reseña",unread:true,msgs:["Muy rico el ceviche, pero tardaron 40 minutos en traerlo."],reply:"Gracias por contarnos, Matías. Ese día tuvimos un problema en cocina y ya reforzamos el turno de la noche."},
+    {ch:"facebook",who:"Patricia G.",time:"Ayer",tag:"Horario",unread:false,msgs:["¿Abren el domingo para almuerzo?"],reply:"¡Hola Patricia! Sí, los domingos abrimos de 12:30 a 17:00."},
+    {ch:"tiktok",who:"@santiagofoodie",time:"Lun",tag:"Comentario",unread:false,msgs:["¿Cuánto sale el pisco sour?"],reply:"¡$4.900! Y en happy hour (18 a 20 h) va 2x1."}
+  ],
+  generic:[
+    {ch:"whatsapp",who:"Daniela V.",time:"10:40",tag:"Disponibilidad",unread:true,msgs:["Hola, ¿tienen hora disponible esta semana?"],reply:"¡Hola Daniela! Tenemos jueves a las 11:00 o viernes a las 16:00. ¿Cuál te acomoda?"},
+    {ch:"instagram",who:"@cliente.nuevo",time:"10:02",tag:"Precio",unread:true,msgs:["¿Cuánto cuesta el servicio?"],reply:"¡Hola! Te enviamos los valores por mensaje directo. ¿Para cuándo lo necesitas?"},
+    {ch:"correo",who:"Proveedor Sur",time:"09:15",tag:"Proveedor",unread:false,msgs:["Asunto: Factura de octubre. Adjuntamos la factura pendiente."],reply:"Gracias, recibida. La pagaremos dentro del plazo acordado."},
+    {ch:"llamadas",who:"+56 9 7654 3210",time:"09:00",tag:"Llamada perdida",unread:true,msgs:["Llamada perdida. Dejó un mensaje de voz de 0:24."],reply:"Hola, vimos tu llamada. ¿En qué te podemos ayudar?"},
+    {ch:"google",who:"Luis A. · 5 de 5",time:"Ayer",tag:"Reseña",unread:false,msgs:["Excelente atención, muy recomendados."],reply:"¡Muchas gracias, Luis!"},
+    {ch:"facebook",who:"Marcela T.",time:"Ayer",tag:"Horario",unread:false,msgs:["¿Atienden los sábados?"],reply:"¡Hola Marcela! Sí, los sábados de 10:00 a 14:00."},
+    {ch:"webchat",who:"Visitante del sitio",time:"Ayer",tag:"Consulta",unread:false,msgs:["¿Hacen envíos a regiones?"],reply:"Sí, enviamos a todo Chile."},
+    {ch:"tiktok",who:"@curioso",time:"Lun",tag:"Comentario",unread:false,msgs:["¿Dónde están ubicados?"],reply:"¡Hola! Te dejamos la dirección en la bio."}
+  ]
+};
+const FAQS = {
+  club:[{q:"¿Hay cancha disponible a tal hora?",n:34,a:"Responde con los bloques libres desde la grilla de reservas y ofrece reservar."},{q:"¿Cuánto cuestan las clases?",n:21,a:"Envía niveles, horarios y precios de la escuela, con link a una clase de prueba."},{q:"¿Cómo me hago socio?",n:12,a:"Envía requisitos, cuota de incorporación y formulario."},{q:"Inscripción a torneos",n:9,a:"Envía fechas de cierre y el link de inscripción."},{q:"¿Pueden jugar no socios?",n:8,a:"Explica la regla de invitados y su valor."}],
+  resto:[{q:"¿Tienen mesa hoy?",n:41,a:"Revisa las reservas y ofrece la hora libre más cercana."},{q:"¿Opciones veganas o sin gluten?",n:18,a:"Envía los platos marcados en la carta."},{q:"Horario y si abren domingo",n:16,a:"Envía el horario de la semana."},{q:"¿Hacen delivery?",n:14,a:"Envía las apps donde están y el radio de retiro."},{q:"¿Tienen estacionamiento?",n:7,a:"Indica el estacionamiento más cercano."}],
+  generic:[{q:"¿Tienen disponibilidad?",n:26,a:"Ofrece las próximas horas libres."},{q:"¿Cuánto cuesta?",n:19,a:"Envía la lista de precios."},{q:"¿Dónde están?",n:11,a:"Envía la dirección y el mapa."},{q:"Horario de atención",n:9,a:"Envía el horario."}]
+};
+const INTEG_BLIND = [
+  "WhatsApp Business: se conecta con un número verificado ante Meta. Pasadas 24 horas desde el último mensaje del cliente, solo puedes escribirle con plantillas aprobadas, y esas tienen costo.",
+  "Instagram y Facebook: la cuenta debe ser profesional y estar vinculada a una página de Facebook para leer y responder mensajes desde aquí.",
+  "Llamadas: si se graban o transcriben, hay que avisarlo al inicio de la llamada.",
+  "La nueva ley de datos personales (Ley 21.719) empieza a regir en diciembre de 2026: guardar chats y datos de clientes exige una base legal y que puedan pedir que se borren."
+];
+function blindList(){ return D().blind.concat((S.spec.channels||[]).length ? INTEG_BLIND : []); }
+const dom3 = () => (S.spec.domain==="club"||S.spec.domain==="resto") ? S.spec.domain : "generic";
+
 function detectDomain(t){
   t = t.toLowerCase();
   if (/tenis|p[aá]del|f[uú]tbol|golf|club deportivo|gimnasio|gym|squash|nataci[oó]n|cancha/.test(t)) return "club";
@@ -398,14 +510,14 @@ function initials(n){
 }
 
 /* ---------- State ---------- */
-function emptySpec(){ return {name:"",tagline:"",kind:"",domain:"",objective:"",audiences:[],modules:[],colors:{primary:"#1D3F72",accent:"#D9E43C",surface:"light"},nav:"top",cta:"",facts:{},stats:[],blindspots:[]}; }
+function emptySpec(){ return {name:"",tagline:"",kind:"",domain:"",objective:"",audiences:[],modules:[],colors:{primary:"#1D3F72",accent:"#D9E43C",surface:"light"},nav:"top",cta:"",facts:{},stats:[],channels:[],autoreply:"sugerir",blindspots:[]}; }
 let S = fresh();
-function fresh(){ return {spec:emptySpec(), log:[], step:0, map:[], page:"home", booked:[], engine:"local", question:null}; }
+function fresh(){ return {spec:emptySpec(), log:[], step:0, map:[], page:"home", booked:[], engine:"local", question:null, face:"cliente", apage:"a_resumen", inbox:{filter:"all", sel:null, read:[], sent:{}, draft:{}, done:[]}, faqOff:[]}; }
 const undo = [];
 let sampleFn = null, aiReady = false, aiWanted = true, busy = null;
 
 const KEY = "andamio.v1";
-try { const raw = localStorage.getItem(KEY); if (raw) { const p = JSON.parse(raw); if (p && p.spec && Array.isArray(p.log)) S = Object.assign(fresh(), p); } } catch(e) {}
+try { const raw = localStorage.getItem(KEY); if (raw) { const p = JSON.parse(raw); if (p && p.spec && Array.isArray(p.log)) { S = Object.assign(fresh(), p); S.spec = Object.assign(emptySpec(), S.spec); S.inbox = Object.assign(fresh().inbox, S.inbox||{}); } } } catch(e) {}
 function save(){ try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e) {} }
 function snapshot(){ undo.push(JSON.stringify(S)); if (undo.length > 40) undo.shift(); $("#undoBtn").disabled = false; }
 
@@ -431,6 +543,17 @@ const FLOW = [
       return [`Objetivo: ${o.label}`, `Menú con ${S.spec.modules.length} secciones`, "Lema de portada"]; }},
   { key:"audiences", build(){ const d=D(); return {text:"¿Quiénes van a usarla?", hint:"Marca todos los que apliquen. Cada perfil tendrá su propio acceso.", multi:true, options:d.audiences.map((a,i)=>({label:a, selected:d.audPre.includes(i)}))}; },
     apply(sel, free){ const a=[...sel]; if(free) a.push(...free.split(/,| y /).map(s=>s.trim()).filter(Boolean)); S.spec.audiences=a; return [`${a.length} perfiles de acceso: ${a.join(", ")}`]; }},
+  { key:"channels", build(){ const list=CH_BY_DOMAIN[S.spec.domain]||CH_BY_DOMAIN.generic; const pre=new Set([...(CH_PRE[S.spec.domain]||CH_PRE.generic), ...(S.spec.channels||[])]);
+      return {text:"¿Por dónde te contacta la gente hoy?", hint:"Todo lo que marques llega a una sola bandeja en el panel del negocio, y cada canal tiene su pestaña en el menú de la izquierda.", multi:true,
+        options:list.map(c=>({label:CH[c].label, value:c, selected:pre.has(c), swatch:[CH[c].c]}))}; },
+    apply(sel, free){ S.spec.channels=sel.filter(c=>CH[c]); S.apage="a_bandeja";
+      const ch=[`Bandeja unificada con ${S.spec.channels.length} canales`, "Panel del negocio con menú a la izquierda", ...S.spec.channels.map(c=>"Pestaña "+CH[c].label)];
+      if(free) ch.push("Anotado para después: "+free); return ch; }},
+  { key:"autoreply", build(){ if(!(S.spec.channels||[]).length) return null;
+      return {text:"Cuando llegan preguntas repetidas (precios, horarios, disponibilidad), ¿qué hago?", hint:"Lo verás en la pestaña “Lo que preguntan” del panel.", multi:false,
+        options:[{label:"Responderlas solo, con IA",value:"auto"},{label:"Sugerir la respuesta y yo apruebo",value:"sugerir"},{label:"Solo agruparlas; respondo yo",value:"ordenar"}]}; },
+    apply(sel){ const v=["auto","sugerir","ordenar"].includes(sel[0])?sel[0]:"sugerir"; S.spec.autoreply=v; S.apage="a_faq";
+      return [({auto:"Respuesta automática a preguntas frecuentes",sugerir:"Respuestas sugeridas que tú apruebas",ordenar:"Preguntas agrupadas por tema"})[v]]; }},
   { key:"modules", build(){ const d=D(); const have=new Set(S.spec.modules.map(m=>m.type));
       return {text:"Estas son las secciones que propongo. ¿Cuáles quedan?", hint:"Las marcadas ya están en la vista previa. Desmarca lo que sobre, marca lo que falte, o escribe una sección nueva.", multi:true,
         options:d.catalog.map(c=>({label:c.label, value:c.type, selected:have.has(c.type)}))}; },
@@ -457,7 +580,7 @@ const FLOW = [
       options:D().palettes.map(p=>({label:p.label, value:p.label, swatch:[p.primary,p.accent]}))}; },
     apply(sel, free){ if(free) return applyCommand(free).length ? applyCommand(free,true) : [];
       const p=D().palettes.find(x=>x.label===sel[0]); if(!p) return []; S.spec.colors={primary:p.primary,accent:p.accent,surface:p.surface}; return [`Paleta: ${p.label}`]; }},
-  { key:"nav", build(){ return {text:"¿Dónde va el menú?", hint:"Cambia la orientación de toda la plataforma.", multi:false,
+  { key:"nav", build(){ return {text:"En el sitio para clientes, ¿dónde va el menú?", hint:"El panel del negocio siempre lleva el menú a la izquierda.", multi:false,
       options:[{label:"Arriba, horizontal",value:"top"},{label:"Al costado (tipo panel)",value:"side"},{label:"Abajo, como app de celular",value:"bottom"}]}; },
     apply(sel, free){ if(!sel[0]) return free ? applyCommand("menú "+free,true) : []; S.spec.nav=sel[0]; if(sel[0]==="bottom") setDevice("mob"); return [`Menú ${({top:"superior",side:"lateral",bottom:"inferior (app)"})[sel[0]]}`]; }},
   { key:"home", build(){ return {text:"Al entrar, ¿qué debe ver primero la gente?", hint:"Define el botón principal y el orden del menú.", multi:false, options:D().home.map(h=>({label:h.label}))}; },
@@ -481,6 +604,8 @@ function localNext(){
 }
 function localStart(text){
   const sp=S.spec; sp.kind=text; sp.domain=detectDomain(text); sp.name=guessName(text);
+  sp.channels=Object.keys(CH_RX).filter(k=>CH_RX[k].test(text));
+  sp.name=sp.name.replace(/\s+que\s+.*$/i,"");
   const d=D(); sp.colors={...d.palettes[0]}; delete sp.colors.label;
   sp.modules=d.catalog.slice(0,3).map(c=>mod(c.type,c.label,c.desc));
   sp.tagline="Tu "+d.noun+", en una plataforma hecha a la medida.";
@@ -512,12 +637,12 @@ function applyCommand(t, commit){
 
 /* ---------- AI engine (Claude via the page's sample capability) ---------- */
 const RULES = `Eres el motor de "Andamio", una plataforma que crea plataformas web a partir de lo que la persona describe en lenguaje natural. Hablas español de Chile, cercano y concreto.
-Tu trabajo: conversar para definir la plataforma haciendo UNA pregunta por turno, con opciones concretas que la persona pueda aceptar o rechazar, y actualizar la especificación (spec) con cada respuesta. Cubre, en el orden que tenga sentido para el rubro: objetivo, perfiles de usuario, secciones del menú, números reales del negocio (ej. canchas, horarios, cupos, precios), colores, orientación del menú (top/side/bottom), qué se ve primero en la portada y el nombre. Propón opciones específicas del rubro (un club de tenis tiene escalerilla, torneos, reservas de cancha, clases; no opciones genéricas).
+Tu trabajo: conversar para definir la plataforma haciendo UNA pregunta por turno, con opciones concretas que la persona pueda aceptar o rechazar, y actualizar la especificación (spec) con cada respuesta. Cubre, en el orden que tenga sentido para el rubro: objetivo, perfiles de usuario, secciones del menú, números reales del negocio (ej. canchas, horarios, cupos, precios), colores, orientación del menú (top/side/bottom), qué se ve primero en la portada, el nombre, por qué canales la contacta la gente (WhatsApp, Instagram, Facebook, correo, llamadas, reseñas de Google, TikTok, chat web, apps de delivery) y qué hacer con las preguntas repetidas. La plataforma tiene dos caras: el sitio para clientes y el panel del negocio, con menú a la izquierda, que junta todos los canales en una bandeja unificada. Propón opciones específicas del rubro (un club de tenis tiene escalerilla, torneos, reservas de cancha, clases; no opciones genéricas).
 Tras unas 8-10 preguntas, o si la persona dice que está listo, termina: "question": null y entrega "blindspots" con 3-5 cosas que podría estar olvidando (reglas, roles, pagos, legal, operación).
 Si la persona pide un cambio directo ("menú lateral", "más oscuro", "agrega pro shop"), aplícalo en el spec y sigue con la pregunta pendiente.
 Responde SOLO con un objeto JSON, sin texto alrededor:
 {"say": "1-2 frases comentando lo que entendiste", "changes": ["frases cortas de lo que cambió en la plataforma"], "spec": SPEC, "question": {"text": "...", "hint": "...", "multi": true|false, "options": [{"label": "...", "selected": true|false, "swatch": ["#hex","#hex"]}]} | null, "blindspots": ["..."]}
-SPEC = {"name": str, "tagline": str, "kind": str, "objective": str, "audiences": [str], "modules": [{"type": uno de ${TYPES.join("|")}, "label": str, "desc": str, "items": [str opcional, contenido de ejemplo]}], "colors": {"primary": "#RRGGBB", "accent": "#RRGGBB", "surface": "light"|"dark"}, "nav": "top"|"side"|"bottom", "cta": str, "facts": {"units": int opcional, "hours": [int,int] opcional, "surface": str opcional}, "stats": [{"label": str, "value": str}] (máx 4)}
+SPEC = {"name": str, "tagline": str, "kind": str, "objective": str, "audiences": [str], "modules": [{"type": uno de ${TYPES.join("|")}, "label": str, "desc": str, "items": [str opcional, contenido de ejemplo]}], "colors": {"primary": "#RRGGBB", "accent": "#RRGGBB", "surface": "light"|"dark"}, "nav": "top"|"side"|"bottom", "cta": str, "facts": {"units": int opcional, "hours": [int,int] opcional, "surface": str opcional}, "stats": [{"label": str, "value": str}] (máx 4), "channels": [ids de ${Object.keys(CH).join("|")}], "autoreply": "auto"|"sugerir"|"ordenar"}
 Reglas: máximo 8 módulos; entre 3 y 6 opciones por pregunta; usa "swatch" solo en preguntas de color; en preguntas multi marca "selected" lo que recomiendas; devuelve SIEMPRE el spec completo.`;
 
 function aiPrompt(userText){
@@ -537,6 +662,8 @@ function sanitize(sp){
   if(o.facts.hours && !(Array.isArray(o.facts.hours)&&o.facts.hours.length===2)) delete o.facts.hours;
   o.stats=Array.isArray(o.stats)?o.stats.slice(0,4).map(s=>({label:String(s.label||""),value:String(s.value??"")})):[];
   o.domain=S.spec.domain||detectDomain(o.kind||o.name);
+  o.channels=Array.isArray(o.channels)?[...new Set(o.channels.filter(c=>CH[c]))]:(S.spec.channels||[]);
+  o.autoreply=["auto","sugerir","ordenar"].includes(o.autoreply)?o.autoreply:(S.spec.autoreply||"sugerir");
   o.blindspots=[];
   return o;
 }
@@ -545,8 +672,10 @@ async function aiTurn(userText){
   try{
     const r = await sampleFn.json(aiPrompt(userText), {modelTier:"quick", cache:false, signal:ctl.signal});
     if(!r || typeof r!=="object" || !r.spec) throw {code:"invalid_json"};
-    const prevNav=S.spec.nav;
+    const prevNav=S.spec.nav, prevCh=JSON.stringify(S.spec.channels||[]), prevAuto=S.spec.autoreply;
     S.spec = sanitize(r.spec);
+    if(JSON.stringify(S.spec.channels)!==prevCh && S.spec.channels.length){ S.face="panel"; S.apage="a_bandeja"; }
+    else if(S.spec.autoreply!==prevAuto && S.spec.channels.length){ S.face="panel"; S.apage="a_faq"; }
     if(S.spec.nav==="bottom" && prevNav!=="bottom") setDevice("mob");
     if(!S.spec.modules.some(m=>m.id===S.page)) S.page="home";
     const q = r.question && Array.isArray(r.question.options) && r.question.options.length ? {
@@ -564,7 +693,7 @@ async function aiTurn(userText){
       if(hide){ aiReady=false; }
       S.engine="local"; updateBadge();
       const msg = hide ? "La IA no está disponible en esta vista, así que sigo en modo guiado." : (e&&e.code==="rate_limited" ? "La IA está ocupada por ahora. Sigo en modo guiado; puedes volver a la IA en unos minutos." : "No pude leer la respuesta de la IA. Sigo en modo guiado.");
-      if(!S.spec.kind){ localFlowAfterIdea(userText, msg); } else { const q=localNext(); S.question=q; S.log.push({who:"ai", text:msg, question:q, blind: q?[]:D().blind}); }
+      if(!S.spec.kind){ localFlowAfterIdea(userText, msg); } else { const q=localNext(); S.question=q; S.log.push({who:"ai", text:msg, question:q, blind: q?[]:blindList()}); }
     }
   }finally{ busy=null; save(); renderAll(); }
 }
@@ -590,9 +719,10 @@ function submit(sel, free){
   if(!S.spec.kind){ localFlowAfterIdea(free || labels[0]); }
   else if(q && !(free && !sel.length && applyCommand(free).length && !["colors","name","units","hours","surface"].includes(q.key))){
     const step=FLOW[S.step]; let ch=step.apply(sel.map(String), free); deriveStats();
+    const face={channels:"panel",autoreply:"panel",modules:"cliente",units:"cliente",hours:"cliente",nav:"cliente",home:"cliente",colors:S.face}[step.key]; if(face) S.face=face;
     S.map.push({said, built:ch}); S.step++;
     const nq=localNext(); S.question=nq;
-    S.log.push({who:"ai", text: nq ? pick(["Listo.","Hecho.","Anotado.","Perfecto."]) : `Listo, ${S.spec.name} tiene su primera versión. Recorre las secciones en la vista previa; puedes seguir pidiendo cambios aquí (ej. “menú lateral”, “agrega galería”, “colores verde y blanco”).`, changes:ch, question:nq, blind: nq?[]:D().blind});
+    S.log.push({who:"ai", text: nq ? pick(["Listo.","Hecho.","Anotado.","Perfecto."]) : `Listo, ${S.spec.name} tiene su primera versión. Recorre las secciones en la vista previa; puedes seguir pidiendo cambios aquí (ej. “menú lateral”, “agrega galería”, “colores verde y blanco”).`, changes:ch, question:nq, blind: nq?[]:blindList()});
   } else {
     const ch=applyCommand(free,true); deriveStats();
     S.map.push({said, built:ch.length?ch:["Sin cambios"]});
@@ -609,7 +739,7 @@ function renderLog(){
   if(!S.log.length){
     h+=`<div class="msg ai"><div class="who">Andamio</div><p>Hola. Cuéntame qué plataforma quieres crear y para quién. Yo te voy proponiendo botones, secciones, colores y números, y tú aceptas o rechazas.</p>
       <div class="q"><h3>¿Qué plataforma quieres crear?</h3><p class="hint">Escríbelo con tus palabras o parte con un ejemplo.</p>
-      <div class="opts">${["Quiero una plataforma para mi club de tenis Providencia","Una app para reservar mesas en mi restaurante","Un portal para apoderados de mi colegio","Una plataforma para mi consulta de kinesiología"].map(x=>`<button type="button" class="opt" data-idea="${esc(x)}">${esc(x)}</button>`).join("")}</div></div></div>`;
+      <div class="opts">${["Quiero una plataforma para mi club de tenis Providencia","Un panel para mi restaurante que junte Instagram, WhatsApp, llamadas y correo","Un portal para apoderados de mi colegio","Una plataforma para mi consulta de kinesiología"].map(x=>`<button type="button" class="opt" data-idea="${esc(x)}">${esc(x)}</button>`).join("")}</div></div></div>`;
   }
   S.log.forEach((m,i)=>{
     if(m.who==="me"){ h+=`<div class="msg me">${esc(m.text)}</div>`; return; }
@@ -643,7 +773,7 @@ $("#log").addEventListener("click", e=>{
     if(busy) return; snapshot();
     S.log.push({who:"me", text:"Saltar"});
     if(S.engine==="ai"&&aiReady){ renderAll(); aiTurn("Prefiero saltar esta pregunta. Sigue con la siguiente."); return; }
-    S.step++; const nq=localNext(); S.question=nq; S.log.push({who:"ai", text:nq?"Sin problema.":"Listo, primera versión armada.", question:nq, blind:nq?[]:D().blind}); save(); renderAll();
+    S.step++; const nq=localNext(); S.question=nq; S.log.push({who:"ai", text:nq?"Sin problema.":"Listo, primera versión armada.", question:nq, blind:nq?[]:blindList()}); save(); renderAll();
   }
 });
 $("#composer").addEventListener("submit", e=>{
@@ -663,6 +793,8 @@ function setDevice(d){ device=d; $("#devDesk").setAttribute("aria-pressed", d===
 function renderStage(){
   const c=$("#canvas"), sp=S.spec;
   $("#devSeg").hidden = view!=="prev";
+  $("#faceSeg").hidden = view!=="prev" || !sp.kind;
+  $("#faceCli").setAttribute("aria-pressed", S.face!=="panel"); $("#facePan").setAttribute("aria-pressed", S.face==="panel");
   if(view==="plan"){ c.innerHTML=planHTML(); $("#stageNote").textContent=""; return; }
   if(!sp.kind){
     c.innerHTML=`<div class="device ${device}"><div class="chrome"><i></i><i></i><i></i><span class="url">tuplataforma.andamio.app</span></div><div class="ghost"><div><h2>Aquí aparece tu plataforma</h2><p>Cada respuesta se traduce en algo visible: secciones del menú, botones, colores, números de tu negocio y la orientación de la navegación.</p></div></div></div>`;
@@ -677,6 +809,7 @@ function renderStage(){
   const navItems=[{id:"home",type:"home",label:"Inicio"},...sp.modules];
   const navBtns = (withIcons) => navItems.map(n=>`<button type="button" data-page="${n.id}" ${S.page===n.id?'aria-current="page"':""}>${withIcons?icon(n.type):""}<span>${esc(n.label)}</span></button>`).join("");
   const logo=`<div class="pv-logo"><i>${esc(initials(sp.name))}</i><span>${esc(sp.name)}</span></div>`;
+  if(S.face==="panel"){ renderPanel(c, style, logo); return; }
   const body=`<div class="pv-body">${pageHTML()}</div>`;
   let inner;
   const nav = (sp.nav==="top" && device==="mob") ? "bottom" : sp.nav;
@@ -688,6 +821,18 @@ function renderStage(){
   $("#stageNote").textContent = `${sp.modules.length} secciones · menú ${({top:"superior",side:"lateral",bottom:"inferior"})[sp.nav]}${sp.nav==="top"&&device==="mob"?" (en móvil pasa abajo)":""}`;
 }
 $("#canvas").addEventListener("click", e=>{
+  const ap=e.target.closest("[data-apage]"); if(ap){ S.apage=ap.dataset.apage; save(); renderStage(); return; }
+  const cv=e.target.closest("[data-conv]"); if(cv){ const i=+cv.dataset.conv; S.inbox.sel=i; if(!S.inbox.read.includes(i)) S.inbox.read.push(i); if(!/^(a_bandeja|ch_)/.test(S.apage)) S.apage="a_bandeja"; save(); renderStage(); return; }
+  const fl=e.target.closest("[data-filter]"); if(fl){ S.inbox.filter=fl.dataset.filter; save(); renderStage(); return; }
+  if(e.target.closest("#pvSend")){ const ta=$("#pvReply"), i=S.inbox.sel; const t=(ta&&ta.value||"").trim(); if(!t||i==null) return;
+    S.inbox.sent[i]=(S.inbox.sent[i]||[]).concat(t); S.inbox.draft[i]=""; if(!S.inbox.read.includes(i)) S.inbox.read.push(i); save(); renderStage(); return; }
+  if(e.target.closest("#pvAI")){ draftAI(S.inbox.sel, e.target.closest("#pvAI")); return; }
+  if(e.target.closest("#pvDone")){ const i=S.inbox.sel; S.inbox.done = S.inbox.done.includes(i) ? S.inbox.done.filter(x=>x!==i) : [...S.inbox.done, i]; if(!S.inbox.read.includes(i)) S.inbox.read.push(i); save(); renderStage(); return; }
+  const fq=e.target.closest("[data-faq]"); if(fq){ const k=+fq.dataset.faq; S.faqOff = S.faqOff.includes(k) ? S.faqOff.filter(x=>x!==k) : [...S.faqOff,k]; save(); renderStage(); return; }
+  const cn=e.target.closest("[data-connect]"); if(cn){ const id=cn.dataset.connect, chs=S.spec.channels||[]; snapshot(); const on=!chs.includes(id);
+    S.spec.channels = on ? [...chs,id] : chs.filter(x=>x!==id);
+    S.map.push({said:(on?"Conectar ":"Desconectar ")+CH[id].label, built:[on?"Pestaña "+CH[id].label+" en el panel":"Quité la pestaña "+CH[id].label, "Bandeja unificada con "+S.spec.channels.length+" canales"]});
+    save(); renderStage(); return; }
   const pg=e.target.closest("[data-page]"); if(pg){ S.page=pg.dataset.page; save(); renderStage(); return; }
   const sl=e.target.closest(".pv-slot.free,.pv-slot.mine"); if(sl){ const k=sl.dataset.k; S.booked = S.booked.includes(k) ? S.booked.filter(x=>x!==k) : [...S.booked,k]; save(); renderStage(); return; }
   if(e.target.closest("#copyJson")){ const t=JSON.stringify(stripIds(S.spec),null,2); const b=e.target.closest("#copyJson");
@@ -743,6 +888,107 @@ const R = {
   lista(m){ return listCards(m.items&&m.items.length?m.items.map(x=>[x]):[["Primer elemento","Aquí va el contenido de esta sección"],["Segundo elemento",""],["Tercer elemento",""]]); }
 };
 
+/* ---------- Business panel: left menu, dashboard, unified inbox, channel tabs, FAQ, connections ---------- */
+const chBadge = id => { const c=CH[id]; return c ? `<span class="chb" style="background:${c.c}" title="${esc(c.label)}">${esc(c.s)}</span>` : ""; };
+function convos(){ const on=new Set(S.spec.channels||[]); return CONVOS[dom3()].map((c,i)=>Object.assign({i},c)).filter(c=>on.has(c.ch)); }
+const isUnread = c => c.unread && !S.inbox.read.includes(c.i);
+function adminNav(){
+  const sp=S.spec, chs=sp.channels||[], cs=convos();
+  return [
+    {g:"General", items:[{id:"a_resumen",label:"Resumen",ic:"dashboard"},{id:"a_bandeja",label:"Bandeja unificada",ic:"inbox",badge:cs.filter(isUnread).length},{id:"a_faq",label:"Lo que preguntan",ic:"faq"}]},
+    {g:"Canales", items:chs.map(c=>({id:"ch_"+c,label:CH[c].label,ch:c,badge:cs.filter(x=>x.ch===c&&isUnread(x)).length}))},
+    {g:"Negocio", items:sp.modules.map(m=>({id:m.id,label:m.label,ic:m.type}))},
+    {g:"Ajustes", items:[{id:"a_conexiones",label:"Conexiones",ic:"plug"}]}
+  ].filter(g=>g.items.length);
+}
+function renderPanel(c, style, logo){
+  const sp=S.spec, compact=device==="mob", nav=adminNav();
+  if(!nav.some(g=>g.items.some(it=>it.id===S.apage))) S.apage="a_resumen";
+  const navHtml=nav.map(g=>`<div class="pv-g">${compact?"":`<span class="pv-gl">${g.g}</span>`}${g.items.map(it=>`<button type="button" data-apage="${it.id}" ${S.apage===it.id?'aria-current="page"':""}>${it.ch?chBadge(it.ch):icon(it.ic)}<span>${esc(it.label)}</span>${it.badge?`<em class="pv-cnt">${it.badge}</em>`:""}</button>`).join("")}</div>`).join("");
+  const top=`<div class="pv-row pv-topbar"><input class="pv-input" style="max-width:340px" placeholder="Buscar conversaciones, clientes, reservas…" tabindex="-1" aria-label="Buscar"><span class="pv-ex">Panel del negocio · Administración</span></div>`;
+  const slug=(sp.name||"plataforma").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
+  c.innerHTML=`<div class="device ${device}"><div class="chrome"><i></i><i></i><i></i><span class="url">panel.${esc(slug)}.andamio.app/${esc(S.apage.replace(/^(a_|ch_)/,""))}</span></div>
+    <div class="pv side ${compact?"compact":""}" style="${style}"><aside class="pv-side">${logo}<nav class="pv-nav" aria-label="Menú del panel">${navHtml}</nav></aside><div class="pv-body">${top}${adminPage()}</div></div></div>`;
+  const n=(sp.channels||[]).length;
+  $("#stageNote").textContent = n ? `${n} canales en una bandeja · menú lateral` : "Sin canales conectados todavía";
+}
+function adminPage(){
+  const sp=S.spec, chs=sp.channels||[], cs=convos(), p=S.apage;
+  const h=(t,s)=>`<div><h2 class="pv-h2">${esc(t)}</h2></div>${s?`<p class="pv-sub">${esc(s)}</p>`:""}`;
+  const ex=`<span class="pv-ex">Mensajes y cifras de ejemplo: al conectar cada canal aparecen los reales.</span>`;
+  const tiles=a=>`<div class="pv-stats">${a.map(s=>`<div class="pv-stat"><b>${esc(s[1])}</b><span>${esc(s[0])}</span></div>`).join("")}</div>`;
+  if(p==="a_resumen"){
+    if(!chs.length) return h("Resumen")+`<div class="pv-card"><b>Todavía no conectas canales</b><span>Conecta WhatsApp, Instagram, correo y los demás para ver todo en un solo lugar.</span><button type="button" class="pv-btn" data-apage="a_conexiones" style="align-self:flex-start">Ir a Conexiones</button></div>`;
+    const total=chs.reduce((s,k)=>s+(CH_TODAY[k]||0),0), unread=cs.filter(isUnread).length;
+    const k=[["Mensajes hoy",String(total)],["Sin responder",String(unread)],["Respuesta promedio",sp.autoreply==="auto"?"1 min":"7 min"],[sp.domain==="club"?"Reservas de cancha hoy":sp.domain==="resto"?"Mesas reservadas hoy":"Citas hoy",sp.domain==="club"?"18":sp.domain==="resto"?"23":"9"]];
+    if(chs.includes("google")) k[3]=["Nota en Google","4,6"];
+    const rows=[...chs].sort((a,b)=>(CH_TODAY[b]||0)-(CH_TODAY[a]||0)), max=Math.max(...rows.map(r=>CH_TODAY[r]||0),1);
+    const faqs=FAQS[dom3()];
+    return h("Resumen de hoy", "Todo lo que llegó por tus canales, en un solo vistazo.")+tiles(k)+
+      `<div class="pv-2"><div class="pv-card" style="gap:12px"><b>Mensajes por canal, hoy</b><div class="pv-bars">${rows.map(r=>`<div class="pv-bar" title="${esc(CH[r].label)}: ${CH_TODAY[r]} mensajes hoy"><span class="pv-bl">${chBadge(r)}<span>${esc(CH[r].label)}</span></span><span class="pv-bt"><i style="width:${(CH_TODAY[r]||0)/max*100}%"></i></span><b>${CH_TODAY[r]||0}</b></div>`).join("")}</div></div>
+      <div class="pv-card" style="gap:10px"><div class="pv-row"><b>Lo que más preguntan</b><button type="button" class="pv-chip" data-apage="a_faq">Ver todo</button></div>${faqs.slice(0,3).map(f=>`<div class="pv-row"><span>${esc(f.q)}</span><b style="font-variant-numeric:tabular-nums">${f.n}</b></div>`).join("")}</div></div>
+      <div class="pv-card" style="gap:4px;padding:6px 0"><b style="padding:8px 14px">Últimos mensajes</b>${cs.slice(0,4).map(cv=>convRow(cv,false)).join("")}</div>`+ex;
+  }
+  if(p==="a_bandeja") return h("Bandeja unificada", "WhatsApp, Instagram, correo, llamadas y reseñas en una sola lista. Respondes desde aquí y sale por el canal original.")+inboxHTML(null)+ex;
+  if(p.startsWith("ch_")){
+    const id=p.slice(3), c=CH[id]; if(!c) return "";
+    const un=cs.filter(x=>x.ch===id&&isUnread(x)).length;
+    const st={google:[["Nota promedio","4,6"],["Reseñas este mes","27"],["Sin responder",String(un)]],
+      llamadas:[["Llamadas hoy",String(CH_TODAY.llamadas)],["Perdidas","2"],["Duración promedio","2:48"]],
+      instagram:[["Mensajes hoy",String(CH_TODAY.instagram)],["Comentarios esta semana","31"],["Sin responder",String(un)]],
+      whatsapp:[["Conversaciones hoy",String(CH_TODAY.whatsapp)],["Sin responder",String(un)],["Respuesta promedio",sp.autoreply==="auto"?"1 min":"6 min"]]}[id]
+      || [["Mensajes hoy",String(CH_TODAY[id]||0)],["Sin responder",String(un)],["Respuesta promedio","9 min"]];
+    return h(c.label, c.what)+tiles(st)+inboxHTML(id)+ex;
+  }
+  if(p==="a_faq"){
+    const mode={auto:"Se responde sola",sugerir:"Sugerida, tú apruebas",ordenar:"Solo agrupada"}[sp.autoreply||"sugerir"];
+    return h("Lo que preguntan", "Las preguntas que más se repiten en todos tus canales esta semana, agrupadas por tema.")+
+      `<div class="pv-row"><span class="pv-tag">Modo: ${esc(mode)}</span><span class="pv-ex">Canales: ${chs.map(chBadge).join(" ")||"ninguno"}</span></div>`+
+      `<div class="pv-card" style="gap:14px">${FAQS[dom3()].map((f,i)=>{ const on=!S.faqOff.includes(i);
+        return `<div class="pv-faq"><span class="n">${f.n}</span><b>${esc(f.q)}</b><button type="button" class="pv-chip" data-faq="${i}" aria-pressed="${on}">${on?(sp.autoreply==="ordenar"?"Agrupando":"Respuesta activa"):"Desactivada"}</button><span class="a">${esc(f.a)}</span></div>`; }).join("")}</div>`+ex;
+  }
+  if(p==="a_conexiones"){
+    const list=CH_BY_DOMAIN[sp.domain]||CH_BY_DOMAIN.generic;
+    return h("Conexiones", "Conecta cada canal una vez y todo llega al panel.")+
+      `<div class="pv-grid">${list.map(id=>{ const on=chs.includes(id); return `<div class="pv-card"><div class="pv-row">${chBadge(id)}<span class="pv-tag">${on?"Conectado":"Sin conectar"}</span></div><b>${esc(CH[id].label)}</b><span>${esc(CH[id].what)}</span><button type="button" class="pv-btn ${on?"alt":""}" data-connect="${id}" style="align-self:flex-start">${on?"Desconectar":"Conectar"}</button></div>`; }).join("")}</div>
+      <span class="pv-ex">Prototipo: conectar es simulado. En la versión real se usan las conexiones oficiales de cada servicio (Meta para WhatsApp, Instagram y Facebook; Google; Gmail u Outlook; un proveedor de telefonía).</span>`;
+  }
+  const m=sp.modules.find(x=>x.id===p); if(!m) return "";
+  return h(m.label, m.desc)+(R[m.type]||R.lista)(m)+`<span class="pv-ex">Contenido de ejemplo: se reemplaza por tus datos reales.</span>`;
+}
+function convRow(cv, inList){
+  const last=(S.inbox.sent[cv.i]||[]).slice(-1)[0];
+  return `<button type="button" class="pv-conv ${isUnread(cv)?"unread":""}" data-conv="${cv.i}" ${inList&&S.inbox.sel===cv.i?'aria-current="true"':""}>${chBadge(cv.ch)}<b>${esc(cv.who)}</b><time>${esc(cv.time)}</time><span class="pv-prev">${S.inbox.done.includes(cv.i)?"Resuelta · ":""}${last?"Tú: "+esc(last):esc(cv.msgs[cv.msgs.length-1])}</span></button>`;
+}
+function inboxHTML(fix){
+  const f=fix||S.inbox.filter, all=convos(), chs=S.spec.channels||[];
+  const cs = f==="all" ? all : all.filter(c=>c.ch===f);
+  const chips = fix ? "" : `<div class="pv-chips"><button type="button" class="pv-chip" data-filter="all" aria-pressed="${f==="all"}">Todos · ${all.length}</button>${chs.map(k=>`<button type="button" class="pv-chip" data-filter="${k}" aria-pressed="${f===k}">${chBadge(k)}${esc(CH[k].label)}</button>`).join("")}</div>`;
+  if(!cs.length) return chips+`<div class="pv-card"><b>No hay mensajes aquí todavía</b><span>Cuando llegue algo por este canal, aparece en esta lista.</span></div>`;
+  let sel=cs.find(c=>c.i===S.inbox.sel); if(!sel){ sel=cs[0]; S.inbox.sel=sel.i; }
+  const sent=S.inbox.sent[sel.i]||[], draft=S.inbox.draft[sel.i];
+  const val = draft!=null && draft!=="" ? draft : (sent.length ? "" : sel.reply);
+  const aiOk = !!(sampleFn && aiReady);
+  const label = S.spec.autoreply==="auto" ? "Respuesta preparada por la IA (se envía sola si es pregunta frecuente)" : S.spec.autoreply==="ordenar" ? "Tu respuesta" : "Respuesta sugerida: revísala y envíala";
+  return chips+`<div class="pv-inbox"><div class="pv-list" role="list">${cs.map(cv=>convRow(cv,true)).join("")}</div>
+    <div class="pv-thread"><div class="pv-row"><div style="display:flex;gap:8px;align-items:center;min-width:0">${chBadge(sel.ch)}<b>${esc(sel.who)}</b></div><span class="pv-tag">${esc(sel.tag)}</span></div>
+      ${sel.msgs.map(t=>`<div class="pv-bub">${esc(t)}<small>${esc(sel.time)} · ${esc(CH[sel.ch].label)}</small></div>`).join("")}
+      ${sent.map(t=>`<div class="pv-bub me">${esc(t)}<small>Enviado · ${esc(CH[sel.ch].send.replace(/^(Enviar|Responder|Publicar|Devolver)\s*/,""))}</small></div>`).join("")}
+      <div class="pv-reply"><label for="pvReply">${esc(label)}</label><textarea class="pv-input" id="pvReply" rows="3">${esc(val)}</textarea>
+        <div class="pv-row" style="justify-content:flex-start;gap:8px"><button type="button" class="pv-btn" id="pvSend">${esc(CH[sel.ch].send)}</button>${aiOk?`<button type="button" class="pv-btn alt" id="pvAI">Redactar con IA</button>`:""}<button type="button" class="pv-btn alt" id="pvDone">${S.inbox.done.includes(sel.i)?"Reabrir":"Marcar resuelta"}</button></div></div>
+    </div></div>`;
+}
+async function draftAI(i, btn){
+  const c=CONVOS[dom3()][i], ta=$("#pvReply"); if(!sampleFn||!ta||!c) return;
+  btn.disabled=true; btn.textContent="Redactando…";
+  try{
+    const {text}=await sampleFn(`Respondes los mensajes de "${S.spec.name}" (${S.spec.kind}). Escribe UNA respuesta breve (máximo 2 frases), cálida y concreta, en español de Chile, para este mensaje que llegó por ${CH[c.ch].label} de ${c.who}: "${c.msgs.join(" ")}". Datos del negocio que puedes usar: ${JSON.stringify({secciones:S.spec.modules.map(m=>m.label), datos:S.spec.facts})}. Si te falta un dato, ofrece confirmarlo. Responde solo con el texto del mensaje.`,
+      {modelTier:"quick", cache:false, onText:({text})=>{ const t=$("#pvReply"); if(t) t.value=text; }});
+    S.inbox.draft[i]=text.trim(); save();
+  }catch(e){ if(["not_granted","sampling_disabled","not_declared","capability_disabled","capability_removed"].includes(e&&e.code)){ aiReady=false; updateBadge(); } }
+  finally{ renderStage(); }
+}
+
 function planHTML(){
   const sp=S.spec;
   return `<div class="plan"><div><h2>Plano de ${esc(sp.name||"tu plataforma")}</h2><p class="lead">Cada cosa que dijiste y en qué se convirtió dentro de la plataforma. Esta especificación es la que después se construye de verdad.</p></div>
@@ -767,6 +1013,9 @@ $("#tabPrev").addEventListener("click", ()=>{ view="prev"; $("#tabPrev").setAttr
 $("#tabPlan").addEventListener("click", ()=>{ view="plan"; $("#tabPlan").setAttribute("aria-pressed","true"); $("#tabPrev").setAttribute("aria-pressed","false"); renderStage(); });
 $("#devDesk").addEventListener("click", ()=>{ setDevice("desk"); renderStage(); });
 $("#devMob").addEventListener("click", ()=>{ setDevice("mob"); renderStage(); });
+$("#faceCli").addEventListener("click", ()=>{ S.face="cliente"; save(); renderStage(); });
+$("#facePan").addEventListener("click", ()=>{ S.face="panel"; save(); renderStage(); });
+$("#canvas").addEventListener("input", e=>{ if(e.target.id==="pvReply" && S.inbox.sel!=null){ S.inbox.draft[S.inbox.sel]=e.target.value; save(); } });
 
 function renderAll(){ renderLog(); renderStage(); updateBadge(); }
 if(S.spec.nav==="bottom") setDevice("mob");
