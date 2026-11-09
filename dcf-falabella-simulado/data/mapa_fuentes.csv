@@ -1,0 +1,12 @@
+partida,origen_en_este_proyecto,donde_buscar_el_dato_real,linea_o_nota_tipica,comentario
+ingresos,SIMULADO (src/simular_datos.py),"EEFF consolidados anuales en cmfchile.cl (buscar Falabella S.A.) o sitio de inversionistas de Falabella","Estado de resultados, negocios NO bancarios: 'Ingresos de actividades ordinarias'",Usar solo la parte no bancaria; los ingresos del banco van en su propia valoración
+costo_ventas,SIMULADO (src/simular_datos.py),EEFF consolidados CMF,"Estado de resultados no bancario: 'Costo de ventas'",Verificar si incluye depreciación; si sí hay que separarla
+gav,SIMULADO (src/simular_datos.py),EEFF consolidados CMF,"'Costos de distribución' + 'Gastos de administración' (nota de gastos por naturaleza)","Debe EXCLUIR depreciación y amortización e INCLUIR pagos de arriendo (tratamiento pre-IFRS 16)"
+depreciacion,SIMULADO (src/simular_datos.py),EEFF consolidados CMF,"Nota 'Gastos por naturaleza' o Estado de flujo de efectivo (ajustes por depreciación)",Excluir depreciación de activos por derecho de uso (IFRS 16)
+capex,SIMULADO (src/simular_datos.py),EEFF consolidados CMF,"Estado de flujo de efectivo: 'Compras de propiedades, planta y equipo' + 'Compras de activos intangibles' + propiedades de inversión","Es salida de caja, no gasto contable"
+inventarios,SIMULADO (src/simular_datos.py),EEFF consolidados CMF,"Estado de situación financiera: 'Inventarios'",
+cxc_comerciales,SIMULADO (src/simular_datos.py),EEFF consolidados CMF,"Estado de situación financiera no bancario: 'Deudores comerciales y otras cuentas por cobrar'","NO incluir colocaciones de CMR/Banco: son el negocio financiero"
+proveedores,SIMULADO (src/simular_datos.py),EEFF consolidados CMF,"Estado de situación financiera: 'Cuentas por pagar comerciales y otras cuentas por pagar'",
+patrimonio_banco,SIMULADO (src/simular_datos.py),EEFF Banco Falabella (CMF bancos) + nota de segmentos de Falabella S.A.,"Patrimonio del segmento 'Servicios bancarios'",Incluir CMR si está dentro del segmento financiero
+utilidad_banco,SIMULADO (src/simular_datos.py),EEFF Banco Falabella (CMF bancos) + nota de segmentos,"Ganancia del segmento 'Servicios bancarios'",Sirve para calcular el ROE histórico
+supuestos (todos),config/supuestos.yaml,Ver campo 'justificacion' de cada supuesto,,"Tasa libre de riesgo: Banco Central de Chile (BCP-10). Beta y ERP: Damodaran Online. Precio y acciones: Bolsa de Santiago / CMF"

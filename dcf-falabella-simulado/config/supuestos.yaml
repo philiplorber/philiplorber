@@ -1,0 +1,146 @@
+# =====================================================================
+# SUPUESTOS DEL DCF — Falabella (DATOS SIMULADOS, ejercicio de aprendizaje)
+# =====================================================================
+# Todo lo que se puede discutir en un DCF vive aquí. Ni el código ni el
+# Excel tienen números "escondidos": si cambias algo aquí y vuelves a
+# correr `python src/construir_excel.py`, cambia todo el modelo.
+#
+# Convenciones:
+#   - Montos en MM CLP (millones de pesos chilenos), nominales.
+#   - Tasas como fracción: 0.05 = 5%.
+#   - Cada supuesto trae `justificacion`. En un modelo real, `fuente`
+#     debe citar el documento exacto (p. ej., "EEFF CMF dic-2025, nota 30").
+#
+# ADVERTENCIA: estos valores son SIMULADOS/ILUSTRATIVOS. No describen a
+# Falabella S.A. real y no son recomendación de inversión.
+# =====================================================================
+
+general:
+  empresa: "Falabella (datos SIMULADOS)"
+  moneda: "MM CLP nominales"
+  fecha_valoracion: "2025-12-31"
+  anio_base: 2025            # último año histórico (real: último anual auditado)
+  anios_proyeccion: 5        # 2026-2030
+  semilla_simulacion: 42     # hace reproducible la simulación de datos
+
+# ---------------------------------------------------------------------
+# 1) PROYECCIÓN OPERATIVA del negocio NO bancario (retail + inmobiliario)
+#    Una lista = un valor por año proyectado (2026 ... 2030).
+# ---------------------------------------------------------------------
+operacion:
+  crecimiento_ingresos:
+    valor: [0.060, 0.055, 0.050, 0.045, 0.040]
+    justificacion: >
+      Converge desde ~6% (inflación ~3-4% + algo de crecimiento real y
+      digital) hacia el crecimiento terminal. Nunca termines la proyección
+      creciendo muy por sobre g: el salto al valor terminal sería artificial.
+  margen_ebitda:
+    valor: [0.095, 0.098, 0.100, 0.100, 0.100]
+    justificacion: >
+      EBITDA DESPUÉS de arriendos (tratamiento pre-IFRS 16). Recupera hacia
+      el promedio histórico simulado (~10%). Revisar contra 5 años de historia.
+  depreciacion_pct_ingresos:
+    valor: [0.030, 0.030, 0.030, 0.030, 0.030]
+    justificacion: "Promedio histórico simulado (sin depreciación de derechos de uso)."
+  capex_pct_ingresos:
+    valor: [0.040, 0.038, 0.036, 0.035, 0.035]
+    justificacion: >
+      Capex sobre depreciación mientras la empresa crece. En el último año
+      capex/D&A debe ser coherente con g (reinversión necesaria para crecer).
+  capital_trabajo_pct_ingresos:
+    valor: [0.080, 0.080, 0.080, 0.080, 0.080]
+    justificacion: >
+      Capital de trabajo neto operativo (inventarios + cuentas por cobrar
+      comerciales - proveedores) como % de ingresos. Promedio histórico simulado.
+  tasa_impuesto:
+    valor: 0.27
+    justificacion: "Tasa de primera categoría régimen general Chile (27%). Simplificación: se ignora que parte de las utilidades vienen de Perú/Colombia."
+
+# ---------------------------------------------------------------------
+# 2) TASA DE DESCUENTO (WACC) del negocio no bancario
+# ---------------------------------------------------------------------
+wacc:
+  tasa_libre_riesgo:
+    valor: 0.055
+    justificacion: "SIMULADO. Real: rendimiento bono BCP 10 años en pesos (Banco Central de Chile, base de datos estadísticos)."
+  beta_desapalancada:
+    valor: 0.80
+    justificacion: "SIMULADO. Real: mediana de betas desapalancadas de retailers comparables (p. ej., base de A. Damodaran, 'Retail (General)', mercados emergentes)."
+  premio_riesgo_mercado:
+    valor: 0.060
+    justificacion: "SIMULADO. Real: premio por riesgo de mercado (ERP) de Chile, p. ej., Damodaran 'Country Default Spreads and Risk Premiums'."
+  riesgo_pais:
+    valor: 0.000
+    justificacion: >
+      Cero porque la tasa libre de riesgo ya es un bono chileno en pesos
+      (ya incorpora el riesgo Chile). Si usaras un bono del Tesoro de EE.UU.,
+      aquí sumarías el riesgo país. NO sumar dos veces.
+  costo_deuda_antes_impuesto:
+    valor: 0.070
+    justificacion: "SIMULADO. Real: rendimiento de mercado de los bonos corporativos de Falabella (Bolsa de Santiago / clasificadoras de riesgo), no la tasa contable histórica."
+  deuda_sobre_capital_total:
+    valor: 0.35
+    justificacion: "Estructura OBJETIVO de largo plazo D/(D+E), a valor de mercado. SIMULADO."
+  tasa_impuesto_escudo:
+    valor: 0.27
+    justificacion: "Tasa marginal que ahorran los intereses (escudo tributario)."
+
+# ---------------------------------------------------------------------
+# 3) VALOR TERMINAL
+# ---------------------------------------------------------------------
+terminal:
+  crecimiento_perpetuo:
+    valor: 0.030
+    justificacion: >
+      Nominal en pesos: ~meta de inflación del Banco Central (3%) + ~0%
+      real. Regla: g no puede superar el crecimiento nominal de largo plazo
+      de la economía; y siempre g < WACC.
+  multiplo_salida_referencia:
+    valor: 7.0
+    justificacion: "Solo para CONTRASTE (EV/EBITDA implícito). SIMULADO. Real: múltiplos de comparables (Cencosud, Ripley, retailers LatAm)."
+
+# ---------------------------------------------------------------------
+# 4) NEGOCIO FINANCIERO (Banco Falabella + CMR): se valoriza por PATRIMONIO
+# ---------------------------------------------------------------------
+banco:
+  # El patrimonio contable del banco NO es un supuesto: es un dato histórico
+  # (fila patrimonio_banco del año base en data/simulado/eeff_historicos.csv).
+  roe_sostenible:
+    valor: 0.15
+    justificacion: "SIMULADO. Real: promedio ROE 3-5 años del banco + CMR, ajustado por ciclo de riesgo de crédito."
+  beta_banco:
+    valor: 1.00
+    justificacion: "SIMULADO. Beta APALANCADA de bancos comparables (en bancos no se desapalanca: la deuda es operativa)."
+  crecimiento_perpetuo:
+    valor: 0.030
+    justificacion: "Igual al g del retail por consistencia macro."
+
+# ---------------------------------------------------------------------
+# 5) PUENTE de Valor Empresa a Valor por Acción
+# ---------------------------------------------------------------------
+puente:
+  deuda_financiera_no_bancaria:
+    valor: 3900000
+    justificacion: "SIMULADO. Real: 'Otros pasivos financieros' corrientes + no corrientes de negocios NO bancarios (excluye obligaciones del banco y pasivos por arrendamiento, porque usamos EBITDA después de arriendos)."
+  caja_no_bancaria:
+    valor: 650000
+    justificacion: "SIMULADO. Real: 'Efectivo y equivalentes' de negocios no bancarios."
+  participaciones_no_controladoras:
+    valor: 1100000
+    justificacion: "SIMULADO. Simplificación: valor libro. Mejor práctica: valor de mercado de la parte de filiales que no es de Falabella."
+  inversiones_asociadas:
+    valor: 250000
+    justificacion: "SIMULADO. Real: nota 'Inversiones contabilizadas por el método de la participación'."
+  acciones_en_circulacion_mm:
+    valor: 2500
+    justificacion: "SIMULADO (millones de acciones). Real: EEFF nota Patrimonio / CMF."
+  precio_mercado:
+    valor: 2800
+    justificacion: "SIMULADO, CLP por acción. Real: precio de cierre en Bolsa de Santiago a la fecha de valoración."
+
+# ---------------------------------------------------------------------
+# 6) SENSIBILIDAD
+# ---------------------------------------------------------------------
+sensibilidad:
+  wacc_delta: [-0.010, -0.005, 0.000, 0.005, 0.010]
+  g_delta:    [-0.010, -0.005, 0.000, 0.005, 0.010]
